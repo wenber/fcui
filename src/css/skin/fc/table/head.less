@@ -3,19 +3,19 @@
  * @author Han Bing Feng (hanbingfeng@baidu.com)
  */
 // Table的表头extra部分的结构
-//   th.ui-table-hcell
-//   th.ui-table-hcell-hover
-//   th.ui-table-hcell-sort
-//   th.ui-table-hcell-asc
-//   th.ui-table-hcell-desc
-//   th.ui-table-hcell-tip
-//     div.ui-table-hcell-text
-//     div.ui-table-hcell-extra
-//       div.ui-table-hcell-hsort
-//       div.ui-table-hcell-htip
+//   th.ui-fctable-hcell
+//   th.ui-fctable-hcell-hover
+//   th.ui-fctable-hcell-sort
+//   th.ui-fctable-hcell-asc
+//   th.ui-fctable-hcell-desc
+//   th.ui-fctable-hcell-tip
+//     div.ui-fctable-hcell-text
+//     div.ui-fctable-hcell-extra
+//       div.ui-fctable-hcell-hsort
+//       div.ui-fctable-hcell-htip
 
 // 表头排序样式
-// & 指代 ui-table-hcell-hsort
+// & 指代 ui-fctable-hcell-hsort
 .set-sort(
     @color: @skin-fc-text-color-gray-light;
     @icon: @font-icon-arrow-down;
@@ -33,27 +33,27 @@
 }
 
 
-.ui-table {
-    .ui-table-thead {
-        .ui-table-hcell {
+.ui-fctable {
+    .ui-fctable-thead {
+        .ui-fctable-hcell {
             &-sort, &-tip {
-                .ui-table-hcell-wrapper {
+                .ui-fctable-hcell-wrapper {
                     position: relative;
                 }
-                .ui-table-hcell-text {
+                .ui-fctable-hcell-text {
                     margin-right: 17px;
                 }
             }
 
-            .ui-table-hcell-extra {
+            .ui-fctable-hcell-extra {
                 position: absolute;
                 top: 12px;
                 right: 0px;
-                .ui-table-hcell-htip {
+                .ui-fctable-hcell-htip {
                     display: inline-block;
                 }
 
-                .ui-table-hcell-hsort {
+                .ui-fctable-hcell-hsort {
                     .set-sort();
                     &:hover {
                         cursor: pointer;
@@ -63,8 +63,8 @@
             }
 
             &-asc {
-                .ui-table-hcell-extra {
-                    .ui-table-hcell-hsort {
+                .ui-fctable-hcell-extra {
+                    .ui-fctable-hcell-hsort {
                         .set-sort(
                             @color: @skin-fc-text-color-blue;
                             @icon: @font-icon-arrow-up;
@@ -74,8 +74,8 @@
             }
 
             &-desc {
-                .ui-table-hcell-extra {
-                    .ui-table-hcell-hsort {
+                .ui-fctable-hcell-extra {
+                    .ui-fctable-hcell-hsort {
                         .set-sort(
                             @color: @skin-fc-text-color-blue;
                             @icon: @font-icon-arrow-down;
@@ -84,18 +84,18 @@
                 }
             }
         }
-        .ui-table-hcell-sort.ui-table-hcell-tip {
-            .ui-table-hcell-text {
+        .ui-fctable-hcell-sort.ui-fctable-hcell-tip {
+            .ui-fctable-hcell-text {
                 margin-right: 34px;
             }
         }
     }
 
     &-head-fixing {
-        .ui-table-thead:not(.ui-table-cover-thead) {
-            .ui-table-hcell {
+        .ui-fctable-thead:not(.ui-fctable-cover-thead) {
+            .ui-fctable-hcell {
                 &-sort, &-tip {
-                    .ui-table-hcell-wrapper {
+                    .ui-fctable-hcell-wrapper {
                         position: inherit;
                     }
                 }
@@ -104,15 +104,15 @@
     }
 }
 
-.ui-table.ui-table-flow-header-icon {
-    .ui-table-thead {
+.ui-fctable.ui-fctable-flow-header-icon {
+    .ui-fctable-thead {
         tr {
             // TODO (hanbingfeng) 本意是不影响多选列的表头。应该用更确切的selector
-            .ui-table-hcell:not(:first-child) {
-                .ui-table-hcell-wrapper {
+            .ui-fctable-hcell:not(:first-child) {
+                .ui-fctable-hcell-wrapper {
                     position: inherit;
                     padding: 12px 5px 11px;
-                    .ui-table-hcell-text {
+                    .ui-fctable-hcell-text {
                         display: inline;
                         padding: 0;
                         margin-right: 0;
@@ -120,18 +120,18 @@
                 }
 
                 &-sort, &-tip {
-                    .ui-table-hcell-wrapper {
+                    .ui-fctable-hcell-wrapper {
                         position: inherit;
                     }
                 }
 
-                .ui-table-hcell-extra {
+                .ui-fctable-hcell-extra {
                     position: inherit;
                     display: inline-block;
                 }
             }
-            .ui-table-hcell-sort.ui-table-hcell-tip {
-                .ui-table-hcell-text {
+            .ui-fctable-hcell-sort.ui-fctable-hcell-tip {
+                .ui-fctable-hcell-text {
                     margin-right: 0;
                 }
             }

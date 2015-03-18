@@ -315,7 +315,7 @@ define(function (require) {
      *
      * @type {string}
      */
-    proto.type = 'Table';
+    proto.type = 'FcTable';
 
     /**
      * 获取表格相关ID
@@ -476,7 +476,7 @@ define(function (require) {
      * @return {Array.<HTMLElement>} TR元素集合
      */
     proto.getRows = function () {
-        return lib.findAll(this.getBody(), '.ui-table-row[data-row]');
+        return lib.findAll(this.getBody(), '.ui-fctable-row[data-row]');
     };
 
     /**
@@ -485,7 +485,7 @@ define(function (require) {
      * @return {HTMLElement} TR元素
      */
     proto.getRow = function (index) {
-        return lib.find(this.getBody(), '.ui-table-row[data-row="' + index + '"]');
+        return lib.find(this.getBody(), '.ui-fctable-row[data-row="' + index + '"]');
     };
 
     /**
@@ -553,7 +553,7 @@ define(function (require) {
             // 如果表是锁定表的右子控件，不要画select fields
             case 'multi':
                 realFields.unshift({
-                    field: 'fcui-table-multi-select',
+                    field: 'fcui-fctable-multi-select',
                     select: true,
                     maxWidth: 30,
                     title: function (item, index) {
@@ -825,7 +825,7 @@ define(function (require) {
      */
     proto.initSort = function (headEl) {
         headEl = headEl || this.getHead();
-        var hsorts = lib.findAll(headEl, '.ui-table-hcell-hsort');
+        var hsorts = lib.findAll(headEl, '.ui-fctable-hcell-hsort');
         u.each(hsorts, function (el) {
             var columnIndex = +lib.getAttribute(el, 'data-column');
             var field = this.realFields[columnIndex];
@@ -838,7 +838,7 @@ define(function (require) {
                     eventHandlers: {
                         click: {
                             eventType: 'click',
-                            query: '.ui-table-sort-item-wrapper',
+                            query: '.ui-fctable-sort-item-wrapper',
                             handler: function (e, el) {
                                 this.fire('close');
                                 this.hide();
@@ -898,7 +898,7 @@ define(function (require) {
                 this.helper.removePartClasses('hcell-asc', sorted);
                 this.helper.removePartClasses('hcell-desc', sorted);
                 // 去掉原来表体的-cell-sorted class
-                sorted = lib.findAll(this.getBody(), '.ui-table-cell-sorted');
+                sorted = lib.findAll(this.getBody(), '.ui-fctable-cell-sorted');
                 u.each(sorted, function (el, index) {
                     this.helper.removePartClasses('cell-sorted', el);
                 }, this);
@@ -912,7 +912,7 @@ define(function (require) {
             this.helper.addPartClasses('hcell-' + this.order, sorted);
             // 给表体对应的cell加上-cell-sorted class
             sorted = lib.findAll(this.getBody(),
-                '.ui-table-cell:nth-child(' + (columnIndex + 1) + ')'
+                '.ui-fctable-cell:nth-child(' + (columnIndex + 1) + ')'
             );
             u.each(sorted, function (el, index) {
                 this.helper.addPartClasses('cell-sorted', el);
@@ -1425,7 +1425,7 @@ define(function (require) {
                     }
 
                     u.each(
-                        lib.findAll(this.getBody(), '.ui-table-multi-select'),
+                        lib.findAll(this.getBody(), '.ui-fctable-multi-select'),
                         function (el) {
                             el.checked = !isRevert;
                         }
@@ -1438,7 +1438,7 @@ define(function (require) {
                         break;
                     }
                     else {
-                        var checkboxNodes = lib.findAll(this.getBody(), '.ui-table-multi-select');
+                        var checkboxNodes = lib.findAll(this.getBody(), '.ui-fctable-multi-select');
                         if (isRevert) {
                             u.each(selected, function (rowIndex) {
                                 checkboxNodes[rowIndex].checked = false;
@@ -1459,9 +1459,9 @@ define(function (require) {
                 }
 
                 // 设置全选状态。
-                lib.find(this.getHead(), '.ui-table-select-all').checked = (this.selectedIndex === -1);
+                lib.find(this.getHead(), '.ui-fctable-select-all').checked = (this.selectedIndex === -1);
                 if (this.isNeedCoverHead) {
-                    lib.find(this.getCoverHead(), '.ui-table-select-all').checked = (this.selectedIndex === -1);
+                    lib.find(this.getCoverHead(), '.ui-fctable-select-all').checked = (this.selectedIndex === -1);
                 }
 
                 break;
@@ -2000,7 +2000,7 @@ define(function (require) {
             }
         }
         // 定位editor到TD
-        lib.dock(lib.parent(el, '.ui-table-cell'), editor.main,
+        lib.dock(lib.parent(el, '.ui-fctable-cell'), editor.main,
             lib.DockPosition.TOP_TOP_LEFT_LEFT);
 
         return editor;
@@ -2120,7 +2120,7 @@ define(function (require) {
         var tds = lib.getChildren(this.getRow(row));
         var td = tds[col];
         if (td) {
-            var el = lib.find(td, '.ui-table-cell-text');
+            var el = lib.find(td, '.ui-fctable-cell-text');
             if (el) {
                 el.innerHTML = html;
             }
@@ -2218,7 +2218,7 @@ define(function (require) {
          */
         'mselect': {
             eventType: 'click',
-            query: '.ui-table-multi-select',
+            query: '.ui-fctable-multi-select',
             handler: function (e, el) {
                 var index = +lib.getAttribute(el, 'data-index');
                 if (el.checked) {
@@ -2233,7 +2233,7 @@ define(function (require) {
         },
         'sselect': {
             eventType: 'click',
-            query: '.ui-table-single-select',
+            query: '.ui-fctable-single-select',
             handler: function (e, el) {
                 var index = +lib.getAttribute(el, 'data-index');
                 this.set('selectedIndex', index);
@@ -2242,7 +2242,7 @@ define(function (require) {
         },
         'allselect': {
             eventType: 'click',
-            query: '.ui-table-select-all',
+            query: '.ui-fctable-select-all',
             handler: function (e, el) {
                 if (el.checked) {
                     this.set('selectedIndex', -1);
@@ -2259,7 +2259,7 @@ define(function (require) {
          */
         'edit': {
             eventType: 'click',
-            query: '.ui-table-cell-edit-entry',
+            query: '.ui-fctable-cell-edit-entry',
             handler: function (e, el) {
                 var editType = lib.getAttribute(el, 'data-edit-type');
                 editType = editType || 'text';

@@ -2,7 +2,7 @@
  * FCUI (Fengchao UI)
  * Copyright 2014 Baidu Inc. All rights reserved.
  *
- * @file 有锁定列功能的表格控件
+ * @file 有锁定列功能的表格控件，未完成
  * @author Han Bing Feng (hanbingfeng@baidu.com)
  * @param {Function} require require
  * @return {Table} 表格控件类
