@@ -11,6 +11,7 @@
  *     width: 按钮宽，
  *     autoClose：是否自动关闭，
  *     dockPosition: layer的位置，参考dom.dock()
+ *     dockOptions: layer的位置其他参数，参考dom.dock()
  *     title: layer的title，
  *     hideTitle: true时，隐藏title，
  *     hideFooter: true时，隐藏footer，

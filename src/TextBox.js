@@ -12,7 +12,6 @@
 define(function (require, exports, module) {
     var _ = require('underscore');
     // var oo = require('fc-core/oo');
-    var browser = require('fc-core/browser');
     var lib = require('./lib');
     var ui = require('./main');
     var InputControl = require('./InputControl');
@@ -25,6 +24,12 @@ define(function (require, exports, module) {
      * 先用这种方式改写esui，等esui全部迁到fcui时再改回来
      */
     var proto = TextBox.prototype;
+
+    /**
+     * text input在ie9下的样式
+     * @type {string}
+     */
+    var IE9_TEXTBOX_INPUT_CLASS = 'textbox-input-ie9';
 
     /**
      * 文本框输入控件
@@ -270,9 +275,7 @@ define(function (require, exports, module) {
     function dispatchInputEvent(e) {
         if (e.type === 'input'
             || e.propertyName === 'value'
-            || (e.type === 'keyup'
-                && browser.getBrowser() === 'IE'
-                && browser.getBrowserVersion() === 9)) {
+            || (e.type === 'keyup' && lib.ie && lib.ie <= 9)) {
             /**
              * @event input
              *
@@ -294,6 +297,7 @@ define(function (require, exports, module) {
      */
     proto.initStructure = function () {
         var input;
+        var isIE9 = (lib.ie && lib.ie <= 9);
         if (lib.isInput(this.main)) {
             var main = this.helper.replaceMain();
 
@@ -317,6 +321,9 @@ define(function (require, exports, module) {
             lib.removeAttribute(
                 input, ui.getConfig('instanceAttr'));
             input.id = this.inputId;
+            if (isIE9) {
+                lib.addClass(input, IE9_TEXTBOX_INPUT_CLASS);
+            }
             // 把原来的`<input>`或`<textarea>`放进去
             this.main.appendChild(input);
         }
@@ -328,6 +335,7 @@ define(function (require, exports, module) {
                     + this.placeholder + '" id="' + this.inputId + '"';
             if (this.name) {
                 html += ' name="' + _.escape(this.name) + '"';
+                html += ' class="' + (isIE9 ? IE9_TEXTBOX_INPUT_CLASS : '') + '"';
             }
             html += this.mode === 'textarea'
                 ? '></textarea>'
@@ -360,7 +368,7 @@ define(function (require, exports, module) {
         var inputEventName = ('oninput' in input)
             ? 'input'
             : 'propertychange';
-        if (browser.getBrowser() === 'IE' && browser.getBrowserVersion() === 9) {
+        if (lib.ie && lib.ie <= 9) {
             inputEventName = 'keyup';
         }
         this.helper.addDOMEvent(input, inputEventName, dispatchInputEvent);
@@ -382,8 +390,7 @@ define(function (require, exports, module) {
                 var input = lib.g(textbox.inputId);
                 var eventName =
                     ('oninput' in input) ? 'input' : 'propertychange';
-                if (browser.getBrowser() === 'IE'
-                    && browser.getBrowserVersion() === 9) {
+                if (lib.ie && lib.ie <= 9) {
                     eventName = 'keyup';
                 }
                 // 由于`propertychange`事件容易进入死循环，因此先要移掉原来的事件

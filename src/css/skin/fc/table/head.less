@@ -103,3 +103,38 @@
         }
     }
 }
+
+.ui-table.ui-table-flow-header-icon {
+    .ui-table-thead {
+        tr {
+            // TODO (hanbingfeng) 本意是不影响多选列的表头。应该用更确切的selector
+            .ui-table-hcell:not(:first-child) {
+                .ui-table-hcell-wrapper {
+                    position: inherit;
+                    padding: 12px 5px 11px;
+                    .ui-table-hcell-text {
+                        display: inline;
+                        padding: 0;
+                        margin-right: 0;
+                    }
+                }
+
+                &-sort, &-tip {
+                    .ui-table-hcell-wrapper {
+                        position: inherit;
+                    }
+                }
+
+                .ui-table-hcell-extra {
+                    position: inherit;
+                    display: inline-block;
+                }
+            }
+            .ui-table-hcell-sort.ui-table-hcell-tip {
+                .ui-table-hcell-text {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}

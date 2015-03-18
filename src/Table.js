@@ -185,6 +185,13 @@ define(function (require) {
          */
         hasVborder: false,
         /**
+         * 表头的图标是否和文字一起混排
+         * 不可通过setProperties修改
+         * @type {boolean}
+         * @default false
+         */
+        flowHeaderIcon: false,
+        /**
          * 是否锁定表头在屏幕顶部。
          * 不可通过setProperties修改
          * 不可与tableMaxHeight同用。
@@ -240,6 +247,12 @@ define(function (require) {
         editHandlers: {
             text: textEditHandler
         },
+        /**
+         * 当数据源为空时，表格显示的文字内容，可以带有html。
+         *
+         * @type {String}
+         */
+        noDataHtml: '没有数据',
         /**
          * 表格的数据源。
          * @type {Array}
@@ -1215,7 +1228,8 @@ define(function (require) {
             realFields: this.realFields,
             fieldsLength: this.realFields.length,
             order: this.order,
-            orderBy: this.orderBy
+            orderBy: this.orderBy,
+            noDataHtml: this.noDataHtml
         });
 
         this.disposeBodyChildren();
@@ -1443,9 +1457,13 @@ define(function (require) {
                         }
                     }
                 }
-                var overallCheckbox = lib.find(this.getHead(), '.ui-table-select-all');
+
                 // 设置全选状态。
-                overallCheckbox.checked = (this.selectedIndex === -1);
+                lib.find(this.getHead(), '.ui-table-select-all').checked = (this.selectedIndex === -1);
+                if (this.isNeedCoverHead) {
+                    lib.find(this.getCoverHead(), '.ui-table-select-all').checked = (this.selectedIndex === -1);
+                }
+
                 break;
             case 'single':
                 if (typeof selected.length === 'undefined') {
@@ -1478,6 +1496,10 @@ define(function (require) {
             options.hasVborder = false;
         }
 
+        if (options.flowHeaderIcon === 'false') {
+            options.flowHeaderIcon = false;
+        }
+
         u.extend(properties, this.defaultProperties, options);
 
         this.setProperties(properties);
@@ -1495,6 +1517,11 @@ define(function (require) {
         if (this.hasVborder) {
             lib.addClasses(this.main,
                 this.helper.getStateClasses('has-vborder'));
+        }
+
+        if (this.flowHeaderIcon) {
+            lib.addClasses(this.main,
+                this.helper.getStateClasses('flow-header-icon'));
         }
 
         if (typeof this.width !== 'undefined') {
@@ -1582,10 +1609,8 @@ define(function (require) {
                         lib.addClasses(this.fixAtDom, this.helper.getPartClasses('head-fixed-item'));
                         this.fixAtDom.style.position = 'fixed';
                         this.fixAtDom.style.top = '0';
-                        // 减掉10px padding和2px border
-                        this.fixAtDom.style.width = (this.getWidth() - 12) + 'px';
                     }
-                    wrapper.style.left = lib.getOffset(this.getTable()).left + 'px';
+                    this.syncCoverTableWrapperLeft();
                     wrapper.style.top = this.fixHeight + 'px';
                     if (this.fixHeight) {
                         // 如果有fixDom，fixDom从flow中拿走会使得table掉上去。
@@ -1613,9 +1638,7 @@ define(function (require) {
 
         var resizeHandler = u.throttle(u.bind(function () {
             this.syncWidth();
-            this.getCoverTableWrapper().style.left = lib.getOffset(this.getTable()).left + 'px';
-            // 减掉10px padding和2px border
-            this.fixAtDom.style.width = (this.getWidth() - 12) + 'px';
+            this.syncCoverTableWrapperLeft();
         }, this), 500);
 
         window.addResizeListener && window.addResizeListener(this.main, resizeHandler);
@@ -1624,6 +1647,24 @@ define(function (require) {
         this.on('afterdispose', function () {
             window.removeResizeListener && window.removeResizeListener(me.main, resizeHandler);
         });
+    };
+
+    /**
+     * 同步head cover的left和width值
+     */
+    proto.syncCoverTableWrapperLeft = function () {
+        if (this.fixAtDom) {
+            // 减掉10px padding和2px border
+            this.fixAtDom.style.width = (this.getWidth() - 12) + 'px';
+        }
+        var table = this.getTable();
+        var tableRect = table.getBoundingClientRect();
+        var container = table.parentNode;
+        var contRect = container.getBoundingClientRect();
+        this.getCoverTableWrapper().style.left = contRect.left + 'px';
+        // 其实可以用container的scrollLeft的。但是据说scrollLeft不见于任何标准内，
+        // 小心为妙
+        this.getCoverTable().style.marginLeft = -(contRect.left - tableRect.left) + 'px';
     };
 
     /**
@@ -2258,12 +2299,17 @@ define(function (require) {
         'main-scroll': {
             eventType: 'scroll',
             enable: function () {
-                return this.tableMaxHeight > 0;
+                return this.tableMaxHeight > 0 || this.fixHeadAtTop;
             },
             handler: function (e, el) {
-                var scrollTop = el.scrollTop;
                 var cover = this.getCoverTable();
-                cover.style.top = scrollTop + 'px';
+                cover.style.top = el.scrollTop + 'px';
+                // 同步scroll-left
+                var table = this.getTable();
+                var tableRect = table.getBoundingClientRect();
+                var container = table.parentNode;
+                var contRect = container.getBoundingClientRect();
+                cover.style.marginLeft = -(contRect.left - tableRect.left) + 'px';
             }
         }
     };

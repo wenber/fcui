@@ -33,5 +33,26 @@ define(function (require) {
         return template.replace(regex, '$1 ' + content + ' $3');
     };
 
+    /**
+     * 获取指定target模板的content。
+     * @param  {string} template 原始的模板string
+     * @param  {string} target 想要替换的target
+     * @return {string} 指定target模板的content
+     */
+    exports.getTarget = function (template, target) {
+        var regex = new RegExp(
+            // 首先match 目标target的开始标签并group
+            '(?:<!--\\s+target:\\s+' + target + '\\s+-->)'
+            // 然后match target的内容，lazy以尽快碰到
+            // 下一个target的开始或者本target的结束
+            + '([.\\s\\S]*?)'
+            // 最后碰本target的结束，或者下一个target的开始，或者字符串尾
+            + '(?:$|(<!--\\s+(target:.*|/target)\\s+-->))',
+            'g'
+        );
+        var matches = regex.exec(template);
+        return matches && matches[1];
+    };
+
     return exports;
 });

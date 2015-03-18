@@ -605,7 +605,7 @@ define(function (require) {
         if (calendar.miniMode !== null) {
             calendar.miniMode = this.miniMode;
             var shortCut = shortCutItems[calendar.miniMode];
-            var defaultValue = shortCut.getValue(calendar.now);
+            var defaultValue = shortCut.getValue.call(calendar, calendar.now);
             calendar.rawValue = defaultValue;
             calendar.view = defaultValue;
         }

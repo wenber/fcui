@@ -269,7 +269,7 @@ define(function (require) {
     DropLayer.prototype.position = function () {
         var dockPosition = this.control.dockPosition
             || lib.DockPosition.TOP_BOTTOM_LEFT_LEFT;
-        lib.dock(this.control.main, this.getElement(), dockPosition);
+        lib.dock(this.control.main, this.getElement(), dockPosition, this.control.dockOptions);
     };
 
     return DropLayer;
