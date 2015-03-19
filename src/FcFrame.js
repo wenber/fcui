@@ -5,6 +5,7 @@
  * @file 
  * @author Han Bing Feng (hanbingfeng@baidu.com)
  */
+
 define(function (require) {
-    return require('esui/Tree');
+    return require('fcui/main').alias('FcFrame', require('esui/Frame'));
 });

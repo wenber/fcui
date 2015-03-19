@@ -2,9 +2,10 @@
  * FCUI (Fengchao UI)
  * Copyright 2014 Baidu Inc. All rights reserved.
  *
- * @file 
+ * @file
  * @author Han Bing Feng (hanbingfeng@baidu.com)
  */
+
 define(function (require) {
-    return require('esui/Frame');
+    return require('fcui/main').alias('FcMonthView', require('esui/MonthView'));
 });

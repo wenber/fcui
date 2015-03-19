@@ -295,6 +295,185 @@ define(function (require) {
     };
     /* eslint-enable fecs-max-statements */
 
+    // 导入register相关的代码，因为要做alias
+    //
+
+    /**
+     * 控件类容器
+     *
+     * @type {Object}
+     * @ignore
+     */
+    var controlClasses = {};
+
+    /**
+     * 注册控件类
+     *
+     * 该方法通过类的`prototype.type`识别控件类型信息。
+     *
+     * @param {Function} controlClass 控件类
+     * @throws
+     * 已经有相同`prototype.type`的控件类存在，不能重复注册同类型控件
+     */
+    main.register = function (controlClass) {
+        registerClass(controlClass, controlClasses);
+    };
+
+    /**
+     * 用别名注册一个控件
+     * @param {string} aliasName 别名
+     * @param {Control} control 控件类
+     * @return {Control} 直接返回control
+     */
+    main.alias = function (aliasName, control) {
+        registerAlias(aliasName, control, controlClasses);
+        return control;
+    };
+
+    /**
+     * 给控件一个别名。可以根据别名找到控件，但控件本身的type仍不变。
+     *
+     * @param {string} aliasName 控件别名
+     * @param {Function} classFunc 控件类
+     * @param {Object} container 类容器
+     */
+    function registerAlias(aliasName, classFunc, container) {
+        if (typeof classFunc === 'function') {
+            if (aliasName in container) {
+                throw new Error(aliasName + ' is exists!');
+            }
+
+            container[aliasName] = classFunc;
+        }
+    }
+
+   /**
+     * 注册类。用于控件类、规则类或扩展类注册
+     *
+     * @param {Function} classFunc 类Function
+     * @param {Object} container 类容器
+     * @ignore
+     */
+    function registerClass(classFunc, container) {
+        if (typeof classFunc === 'function') {
+            var type = classFunc.prototype.type;
+            if (type in container) {
+                throw new Error(type + ' is exists!');
+            }
+
+            container[type] = classFunc;
+        }
+    }
+
+    /**
+     * 扩展类容器
+     *
+     * @type {Object}
+     * @ignore
+     */
+    var extensionClasses = {};
+
+    /**
+     * 注册扩展类。
+     *
+     * 该方法通过类的`prototype.type`识别扩展类型信息
+     *
+     * @param {Function} extensionClass 扩展类
+     * @throws
+     * 已经有相同`prototype.type`的扩展类存在，不能重复注册同类型扩展
+     */
+    main.registerExtension = function (extensionClass) {
+        registerClass(extensionClass, extensionClasses);
+    };
+
+    /**
+     * 创建扩展
+     *
+     * @param {string} type 扩展类型
+     * @param {Object} options 初始化参数
+     * @return {Extension}
+     */
+    main.createExtension = function (type, options) {
+        return createInstance(type, options, extensionClasses);
+    };
+
+    /**
+     * 验证规则类容器
+     *
+     * @type {Object}
+     * @ignore
+     */
+    var ruleClasses = [];
+
+    /**
+     * 注册控件验证规则类
+     *
+     * 该方法通过类的`prototype.type`识别验证规则类型信息
+     *
+     * @param {Function} ruleClass 验证规则类
+     * @param {number} priority 优先级，越小的优先级越高
+     * @throws
+     * 已经有相同`prototype.type`的验证规则类存在，不能重复注册同类型验证规则
+     */
+    main.registerRule = function (ruleClass, priority) {
+        // 多个Rule共享一个属性似乎也没问题
+        ruleClasses.push({type: ruleClass, priority: priority});
+        // 能有几个规则，这里就不优化为插入排序了
+        ruleClasses.sort(
+            function (x, y) {
+                return x.priority - y.priority;
+            }
+        );
+    };
+
+    /**
+     * 创建控件实例需要的验证规则
+     *
+     * @param {Control} control 控件实例
+     * @return {validator.Rule[]} 验证规则数组
+     */
+    main.createRulesByControl = function (control) {
+        var rules = [];
+        for (var i = 0; i < ruleClasses.length; i++) {
+            var RuleClass = ruleClasses[i].type;
+            if (control.get(RuleClass.prototype.type) != null) {
+                rules.push(new RuleClass());
+            }
+        }
+
+        return rules;
+    };
+
+    /**
+     * 创建类实例。用于控件类、规则类或扩展类的实例创建
+     *
+     * @param {string} type 类型
+     * @param {Object} options 初始化参数
+     * @param {Object} container 类容器
+     * @ignore
+     * @return {Control} 创建的控件
+     */
+    function createInstance(type, options, container) {
+        var Constructor = container[type];
+        if (Constructor) {
+            delete options.type;
+            return new Constructor(options);
+        }
+
+        return null;
+    }
+
+    /**
+     * 创建控件
+     *
+     * @param {string} type 控件类型
+     * @param {Object} options 初始化参数
+     * @return {Control}
+     */
+    main.create = function (type, options) {
+        return createInstance(type, options, controlClasses);
+    };
+
     main.version = '0.0.2-alpha.32';
 
     return main;

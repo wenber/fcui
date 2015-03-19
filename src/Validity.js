@@ -6,6 +6,7 @@
  * @file 验证信息显示控件
  * @author otakustay
  */
+
 define(
     function (require) {
         return require('esui/Validity');
