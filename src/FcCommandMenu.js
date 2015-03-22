@@ -11,6 +11,7 @@
  *      FcCommandMenuHoverToggle hover时显示浮层
  *      FcCommandButton
  */
+
 define(
     function (require) {
         var u = require('underscore');
@@ -151,7 +152,7 @@ define(
          * @readonly
          * @override
          */
-        CommandMenu.prototype.type = 'CommandMenu';
+        CommandMenu.prototype.type = 'FcCommandMenu';
 
         /**
          * 浮层中每一项的HTML模板
@@ -228,8 +229,8 @@ define(
             );
             // 如果控件可用，绑定事件
             if (!control.disabled) {
-                var mainButton = control.helper.getPart('mainButton');
-                var dropButton = control.helper.getPart('dropButton');
+                var mainButton = control.helper.getPart('main-button');
+                var dropButton = control.helper.getPart('drop-button');
                 // 点击主区域，fire出事件
                 control.helper.addDOMEvent(
                     mainButton,
@@ -278,11 +279,11 @@ define(
 
             var data = {
                 displayText: control.displayText,
-                mainButtonId: control.helper.getId('mainButton'),
-                mainButtonClass: control.helper.getPartClasses('mainButton')
+                mainButtonId: control.helper.getId('main-button'),
+                mainButtonClass: control.helper.getPartClasses('main-button')
                     .join(' '),
-                dropButtonId: control.helper.getId('dropButton'),
-                dropButtonClass: control.helper.getPartClasses('dropButton')
+                dropButtonId: control.helper.getId('drop-button'),
+                dropButtonClass: control.helper.getPartClasses('drop-button')
                     .join(' ')
             };
 
@@ -366,7 +367,7 @@ define(
                 paint: function (menu) {
                     menu.main.style.width = menu.width;
                     if (menu.isCommandButton) {
-                        lib.find(menu.main, '.ui-commandmenu-mainButton')
+                        lib.find(menu.main, '.ui-fccommandmenu-main-button')
                             .style.width = menu.width - COMMAND_MENU_WIDTH;
                     }
                 }
@@ -397,7 +398,7 @@ define(
                 name: 'displayText',
                 paint: function (menu) {
                     if (menu.isCommandButton) {
-                        lib.find(menu.main, '.ui-commandmenu-mainButton')
+                        lib.find(menu.main, '.ui-fccommandmenu-main-button')
                             .innerHTML = menu.displayText;
                     }
                     else {
