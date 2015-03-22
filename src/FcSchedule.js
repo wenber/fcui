@@ -1241,7 +1241,7 @@ define(function (require) {
          *
          * @type {string}
          */
-        type: 'Schedule',
+        type: 'FcSchedule',
 
         /**
          * 选择模式，分为'single'和'block'
