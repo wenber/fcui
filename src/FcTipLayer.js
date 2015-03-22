@@ -10,9 +10,9 @@
  */
 
 define(function (require) {
-    require('./Button');
-    require('./Label');
-    require('./Panel');
+    require('./FcButton');
+    require('./FcLabel');
+    require('./FcPanel');
 
     var u = require('underscore');
     var oo = require('fc-core/oo');
@@ -221,7 +221,7 @@ define(function (require) {
          *
          * @type {string}
          */
-        type: 'TipLayer',
+        type: 'FcTipLayer',
 
         /**
          * 初始化参数
@@ -871,13 +871,13 @@ define(function (require) {
 
         properties.type = null;
 
-        var tipLayer = ui.create('TipLayer', properties);
+        var tipLayer = ui.create('FcTipLayer', properties);
 
         tipLayer.setContent(content);
 
         var okText = args.okText || '知道了';
         tipLayer.setFoot(''
-            + '<div data-ui="type:Button;childName:okBtn;id:'
+            + '<div data-ui="type:FcButton;childName:okBtn;id:'
             + tipLayerId + '-' + okPrefix + ';width:50;"'
             + 'class="'
             + tipLayer.helper.getPartClasses('once-notice')

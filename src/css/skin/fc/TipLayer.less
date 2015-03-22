@@ -3,6 +3,126 @@
  * @author Chong Chen (chenchong02@baidu.com)
  */
 
+/**
+  * ESUI (Enterprise Simple UI)
+  * Copyright 2013 Baidu Inc. All rights reserved.
+  *
+  * @file 通用提示用漂浮层
+  * @author dbear
+  */
+ 
+@import "../../esui/mixin.less";
+@import "../../esui/variable.less";
+.@{ui-class-prefix}-fctiplayer {
+    background: #fff6bd;
+    border: 1px solid #d5ca81;
+    padding: 5px;
+    z-index: @layer-z-index;
+    position: absolute;
+}
+
+.@{ui-class-prefix}-fctiplayer-rt,
+.@{ui-class-prefix}-fctiplayer-rb {
+    margin-left: -10px;
+}
+
+.@{ui-class-prefix}-fctiplayer-lt,
+.@{ui-class-prefix}-fctiplayer-lb {
+    margin-left: 10px;
+}
+
+.@{ui-class-prefix}-fctiplayer-title,
+.@{ui-class-prefix}-fctiplayer-body {
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+}
+
+.@{ui-class-prefix}-fctiplayer-title {
+    margin: .5em 0;
+}
+
+.@{ui-class-prefix}-fctiplayer-body {
+    margin-bottom: 5px;
+}
+
+.@{ui-class-prefix}-fctiplayer-arrow {
+    display: none;
+    position: absolute;
+    font-size: 1px;
+}
+
+.@{ui-class-prefix}-fctiplayer-arrow-tl {
+    display: block;
+    .background (url(../img/esui_transparent.gif), no-repeat, -24px, -12px);
+    width: 12px;
+    height: 13px;
+    top: -13px;
+    left: 12px;
+}
+.@{ui-class-prefix}-fctiplayer-arrow-tr {
+    display: block;
+    .background (url(../img/esui_transparent.gif), no-repeat, -36px, -12px);
+    width: 12px;
+    height: 13px;
+    top: -13px;
+    right: 12px;
+}
+.@{ui-class-prefix}-fctiplayer-arrow-bl {
+    display: block;
+    .background (url(../img/esui_transparent.gif), no-repeat, -12px, -12px);
+    width: 12px;
+    height: 13px;
+    bottom: -13px;
+    left: 12px;
+}
+.@{ui-class-prefix}-fctiplayer-arrow-br {
+    display: block;
+    .background (url(../img/esui_transparent.gif), no-repeat, 0px, -12px);
+    width: 12px;
+    height: 13px;
+    bottom: -13px;
+    right: 12px;
+}
+
+.@{ui-class-prefix}-fctiplayer-arrow-lt {
+    display: block;
+    .background (url(../img/esui_transparent.gif), no-repeat, -26px, 0px);
+    width: 13px;
+    height: 12px;
+    top: 7px;
+    left: -13px;
+}
+.@{ui-class-prefix}-fctiplayer-arrow-lb {
+    display: block;
+    .background (url(../img/esui_transparent.gif), no-repeat, -39px, 0);
+    width: 13px;
+    height: 12px;
+    bottom: 7px;
+    left: -13px;
+}
+.@{ui-class-prefix}-fctiplayer-arrow-rt {
+    display: block;
+    .background (url(../img/esui_transparent.gif));
+    width: 13px;
+    height: 12px;
+    top: 7px;
+    right: -13px;
+}
+.@{ui-class-prefix}-fctiplayer-arrow-rb {
+    display: block;
+    .background (url(../img/esui_transparent.gif), no-repeat, -13px, 0);
+    width: 13px;
+    height: 12px;
+    bottom: 7px;
+    right: -13px;
+}
+
+.@{ui-class-prefix}-fctiplayer-hidden {
+    display: none;
+}
+
+
 .set-skin-fc-tiplayer(
     @border-color: @skin-fc-text-color-gray-light;
     @background-color: @skin-fc-bg-color-white;
@@ -24,7 +144,7 @@
     background-color: @background-color;
     padding: 10px 10px 7px;
     // 加一层选择器战胜esui
-    .@{skin-fc-prefix}-tiplayer-title {
+    .@{ui-class-prefix}-fctiplayer-title {
         margin: 0;
         padding: 0 0 7px;
         line-height: 16px;
@@ -35,8 +155,8 @@
             padding: 0;
         }
     }
-    .@{skin-fc-prefix}-tiplayer-body,
-    .@{skin-fc-prefix}-tiplayer-body-panel {
+    .@{ui-class-prefix}-fctiplayer-body,
+    .@{ui-class-prefix}-fctiplayer-body-panel {
         margin: 0;
         padding: 0;
         font-size: 12px;
@@ -44,14 +164,14 @@
         line-height: 18px;
         word-break: break-all;
     }
-    .@{skin-fc-prefix}-tiplayer-arrow {
+    .@{ui-class-prefix}-fctiplayer-arrow {
         display: none;
     }   
 }
 .set-skin-fc-tiplayer-title-icon(
     @icon-color
 ) {
-    .@{skin-fc-prefix}-tiplayer-title {
+    .@{ui-class-prefix}-fctiplayer-title {
         .font-icon {
             display: inline-block;
             vertical-align: top;
@@ -61,10 +181,10 @@
         }
     }
 }
-.@{skin-fc-prefix}-tiplayer {
+.@{ui-class-prefix}-fctiplayer {
     .set-skin-fc-tiplayer();
 }
-.@{skin-fc-prefix}-tiplayer-warn {
+.@{ui-class-prefix}-fctiplayer-warn {
     .set-skin-fc-tiplayer(
         @border-color: @skin-fc-border-color-orange;
         @background-color: @skin-fc-bg-color-orange

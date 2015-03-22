@@ -8,6 +8,7 @@
  * @param {Function} require require
  * @return {Tip} 提示消息控件
  */
+
 define(
     function (require) {
         var u = require('underscore');
@@ -16,7 +17,7 @@ define(
         var ui = require('./main');
         var lib = require('./lib');
 
-        require('./TipLayer');
+        require('./FcTipLayer');
 
         /**
          * 提示信息控件
@@ -40,7 +41,7 @@ define(
          * @readonly
          * @override
          */
-        proto.type = 'Tip';
+        proto.type = 'FcTip';
 
         /**
          * 初始化参数
@@ -138,7 +139,7 @@ define(
 
             }
             var tipLayer = ui.create(
-                'TipLayer',
+                'FcTipLayer',
                 {
                     main: main,
                     childName: 'layer',
