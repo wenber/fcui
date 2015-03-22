@@ -10,7 +10,7 @@ define(function (require) {
     var lib = require('../lib');
     var Layer = require('../Layer');
 
-    require('../Button');
+    require('../FcButton');
 
     /**
      * 像素单位

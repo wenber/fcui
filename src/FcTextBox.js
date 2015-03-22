@@ -62,7 +62,7 @@ define(function (require, exports, module) {
      * @readonly
      * @override
      */
-    proto.type = 'TextBox';
+    proto.type = 'FcTextBox';
 
     /**
      * 初始化参数
@@ -665,7 +665,7 @@ define(function (require, exports, module) {
      * @static
      */
     TextBox.defaultProperties = defaultProperties;
-    // ui.register(TextBox);
+    ui.register(TextBox);
 
     return TextBox;
 });

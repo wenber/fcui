@@ -9,8 +9,8 @@
     ${content|raw}
 </div>
 <div class="${footerClass}">
-    <div data-ui-type="Button" data-ui-child-name="confirmBtn"
+    <div data-ui-type="FcButton" data-ui-child-name="confirmBtn"
         data-ui-skin="ui-fc-important" class="${layer-confirm-button | class}">确定</div>
-    <div data-ui-type="Button" data-ui-child-name="cancelBtn"
+    <div data-ui-type="FcButton" data-ui-child-name="cancelBtn"
         class="${layer-cancel-button | class}">取消</div>
 </div>

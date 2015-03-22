@@ -1,14 +1,15 @@
 /**
  * FCUI (Fengchao UI)
  * Copyright 2014 Baidu Inc. All rights reserved.
+ * 对原有ESUI select直接扩展，支持下拉任意layer的内容。
  *
- * @file 
+ * @file
  * @author Cory(kuanghongrui@baidu.com)
  */
+
 define(function (require) {
     var _ = require('underscore');
     var fc = require('fc-core');
-    var fcui = require('./main');
     var helper = require('./controlHelper');
     var InputControl = require('./InputControl');
     var lib = require('./lib');
@@ -176,7 +177,7 @@ define(function (require) {
     /**
      * 弹出层提交。
      *
-     * @param {Event} e
+     * @param {Event} e e
      */
     Select.prototype.layerSubmit = function (e) {
         this.set('value', e.data);
@@ -230,6 +231,7 @@ define(function (require) {
      * 获取显示的label+option名字的html字符串。
      * @param {Object} data displayTemplate中的数据。
      * @protected
+     * @return {string} html片段
      */
     Select.prototype._getDisplayHTML = function (data) {
         var label = _.escape(this.label);

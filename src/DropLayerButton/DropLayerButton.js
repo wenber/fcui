@@ -37,7 +37,7 @@ define(function (require) {
     var fc = require('fc-core');
     var ui = require('../main');
     var lib = require('../lib');
-    var CommandMenu = require('../CommandMenu');
+    var CommandMenu = require('../FcCommandMenu');
     var Control = require('../Control');
     var DropLayer = require('./DropLayer');
 
