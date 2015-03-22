@@ -7,6 +7,7 @@
  * @author Feixiang Yuan(yuanfeixiang@baidu.com)
  * @date 2014-12-02
  */
+
 define(
     function(require) {
         var u = require('underscore');
@@ -204,8 +205,8 @@ define(
          * 放置层
          */
         Layer.prototype.position = function () {
-                var element = this.getElement();
-                Layer.attachTo(element, this.control.main, this.dock);
+            var element = this.getElement();
+            Layer.attachTo(element, this.control.main, this.dock);
         };
 
         /**
