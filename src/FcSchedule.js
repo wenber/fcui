@@ -298,6 +298,7 @@ define(function (require) {
                 + ' id="${itemId}"'
                 + ' data-day="${dayIndex}"'
                 + ' data-time-item="1"'
+                + ' data-info="${rawInfo}"'
                 + ' data-time="${timeIndex}">'
             + '</div>';
 
@@ -326,7 +327,8 @@ define(function (require) {
                             itemId: itemId,
                             timeClass: getClass(me, 'time'),
                             dayIndex: i,
-                            timeIndex: j
+                            timeIndex: j,
+                            rawInfo: me.rawInfo.length ? me.rawInfo[i][j] : ''
                         }
                     )
                 );
@@ -351,6 +353,7 @@ define(function (require) {
         me.fire('beforerepaintview');
         var selectedClass = helper.getPartClasses(me, 'time-selected');
         var hoverClass = helper.getPartClasses(me, 'time-hover');
+        var thirdClass = typeof me.thirdClass === 'string' ? me.thirdClass : '';
 
         // 根据value设置时间checkbox的状态
         var valueCopy = rawValueClone(value);
@@ -387,11 +390,15 @@ define(function (require) {
 
                 // 根据value,设置item的选中状态
                 if (+val === 1) {
-
                     lib.addClasses(item, selectedClass);
                 }
-                else {
+                else if (!val) {
                     lib.removeClasses(item, selectedClass);
+                }
+                // 两种状态共存
+                else if (+val === 2) {
+                    lib.removeClasses(item, selectedClass);
+                    item.className += ' ' + thirdClass;
                 }
                 item.setAttribute('data-value', val);
 
@@ -777,14 +784,14 @@ define(function (require) {
         // 获取当前元素所代表的时间
         var time = parseInt(element.getAttribute('data-time'), 10);
         var day  = parseInt(element.getAttribute('data-day'), 10);
+        var info = element.getAttribute('data-info');
 
-
-        // 创立并显示提示tip
+        // 如果用户传入了提示信息，就使用传入的，否则默认显示当前的时间点信息
         var tipText = lib.format(timeTipTpl,
             {
-                time: '<strong>' + time
+                time: info ? info : ('<strong>' + time
                     + ':00</strong>&nbsp;—&nbsp;<strong>'
-                    + (time + 1) + ':00</strong>',
+                    + (time + 1) + ':00</strong>'),
                 text: me.selectMode === 'block' ? '点击/拖动鼠标选择' : '',
                 timeId: getId(me, 'timeitem-tip-head'),
                 textId: getId(me, 'timeitem-tip-body'),
@@ -792,6 +799,7 @@ define(function (require) {
                 textClass: getClass(me, 'timeitem-tip-body')
             }
         );
+
         var tipId = getId(me, 'timeitem-tip');
 
         showPromptTip(me, tipId, mousepos, tipText);
@@ -1190,8 +1198,13 @@ define(function (require) {
         var inputs = dayHead.getElementsByTagName('input');
 
         for (var i = 0, len = inputs.length; i < len; i++) {
-
-            inputs[i][state] = value;
+            // 针对没有的属性，必须使用setAttribute设置
+            if (!inputs[i][state]) {
+                inputs[i].setAttribute(state, value);
+            }
+            else {
+                inputs[i][state] = value;
+            }
         }
     }
 
@@ -1205,7 +1218,13 @@ define(function (require) {
         var hourHead = lib.g(getId(schedule, 'hour-head'));
         var inputs = hourHead.getElementsByTagName('input');
         _.each(inputs, function (item) {
-            item[state] = value;
+            // 针对没有的属性，必须使用setAttribute设置
+            if (!item[state]) {
+                item.setAttribute(state, value);
+            }
+            else {
+                item[state] = value;
+            }
         });
     }
 
@@ -1233,6 +1252,21 @@ define(function (require) {
         }
 
         schedule.setRawValue(rawValueCopy);
+    }
+
+    /**
+     * 只读时，单击事件设置为空
+     * @param {Schedule} schedule 当前控件
+     * @param {boolean} readonly 是否只读
+     */
+    function setHourReadonly(schedule, readonly) {
+        var timebody = lib.g(getId(schedule, 'time-body'));
+        if (readonly) {
+            timebody.on('click', '.ui-schedule-time', function (e) {
+                e.stopPropagation();
+                return false;
+            });
+        }
     }
 
     proto = _.extend(proto, {
@@ -1286,6 +1320,10 @@ define(function (require) {
 
             if (this.unSelectedValue == null) {
                 this.unSelectedValue = initValue();
+            }
+
+            if (this.rawInfo == null) {
+                this.rawInfo = [];
             }
 
             // 记录当前创建的tip元素
@@ -1438,6 +1476,7 @@ define(function (require) {
 
                     setDayCheckboxState(schedule, 'readonly', value);
                     setHourCheckboxState(schedule, 'readonly', value);
+                    setHourReadonly(schedule, value);
                 }
             }
         ),
