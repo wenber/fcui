@@ -474,7 +474,7 @@ define(function (require) {
         return createInstance(type, options, controlClasses);
     };
 
-    main.version = '0.0.2-beta.1';
+    main.version = '0.0.2-alpha.33';
 
     return main;
 });
