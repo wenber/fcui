@@ -484,7 +484,7 @@ define(function (require) {
             || esuiCreate(type, options);   
     };
 
-    main.version = '0.0.2-alpha.33';
+    main.version = '0.0.2-beta.1';
 
     return main;
 });
