@@ -386,6 +386,8 @@ define(function (require) {
         registerClass(extensionClass, extensionClasses);
     };
 
+    var esuiCreateExtension = main.createExtension;
+
     /**
      * 创建扩展
      *
@@ -394,7 +396,10 @@ define(function (require) {
      * @return {Extension}
      */
     main.createExtension = function (type, options) {
-        return createInstance(type, options, extensionClasses);
+        // 若有扩展先于FCUI main初始化时register，则这些扩展会放在ESUI的闭包classes中，
+        // 这里若本地FCUI找不到想要的扩展，则回退到ESUI中。
+        return createInstance(type, options, extensionClasses)
+            || esuiCreateExtension(type, options);
     };
 
     /**
@@ -463,6 +468,8 @@ define(function (require) {
         return null;
     }
 
+    var esuiCreate = main.create;
+
     /**
      * 创建控件
      *
@@ -471,7 +478,10 @@ define(function (require) {
      * @return {Control}
      */
     main.create = function (type, options) {
-        return createInstance(type, options, controlClasses);
+        // 若有控件先于FCUI main初始化时register，则这些控件会放在ESUI的闭包classes中，
+        // 这里若本地FCUI找不到想要的控件，则回退到ESUI中。
+        return createInstance(type, options, controlClasses)
+            || esuiCreate(type, options);   
     };
 
     main.version = '0.0.2-alpha.33';
