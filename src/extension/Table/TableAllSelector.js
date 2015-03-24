@@ -68,12 +68,12 @@ define(function (require) {
         renderAllSelector: function (headNode) {
             var table = this.target;
             headNode = headNode || table.getHead();
-            headNode.querySelectorAll('.ui-table-hcell .ui-table-select-all')[0].style.display = 'none';
+            headNode.querySelectorAll('.ui-fctable-hcell .ui-fctable-select-all')[0].style.display = 'none';
             var allSelector = fcui.create('AllSelector', {
                 width: SELECT_ALL_WIDTH,
                 height: SELECT_ALL_HEIGHT
             });
-            var hcellNode = headNode.querySelector('.ui-table-hcell .ui-table-hcell-text');
+            var hcellNode = headNode.querySelector('.ui-fctable-hcell .ui-fctable-hcell-text');
             hcellNode.className += ' ' + table.helper.getPartClasses('all-selector').join(' ');
             allSelector.appendTo(hcellNode);
             return allSelector;
