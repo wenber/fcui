@@ -7,8 +7,8 @@
         <script src="../jquery.min.js"></script>
         <script src="../../../dep/esui/3.1.0-beta.4/src/customShim.js"></script>
         <link rel="stylesheet" href="../demo.css" />
-        <link rel="stylesheet" href="../../../src/css/main.css" />
-        <link rel="stylesheet" href="../../../dep/fc-icon/0.0.4/src/css/fc-icon.css"/>
+        <link rel="stylesheet" href="../../../src/css/main.less" />
+        <link rel="stylesheet" href="../../../dep/fc-icon/0.0.4/src/css/fc-icon.less"/>
         <script>
             // derived from ESUI 3.1.0-beta.5 demo file
             require.config({
@@ -93,7 +93,7 @@
         <div id="console"></div>
         <div class="container" id="container" style="margin:0 auto;">
             <h3>Basic</h3>
-            <div data-ui-type="Table"
+            <div data-ui-type="FcTable"
                 data-ui-id="myTable"
                 data-ui-table-max-height="300"
                 data-ui-has-vborder="true"></div>
@@ -115,7 +115,7 @@
         require(
             [
                 'fcui',
-                'fcui/Table',
+                'fcui/FcTable',
                 'fcui/Tip'
             ],
             function (ui) {

@@ -94,11 +94,11 @@
         require(
             [
                 'fcui',
-                'fcui/CommandMenu',
+                'fcui/FcCommandMenu',
                 'fcui/extension/FcUiSkin'
             ],
             function (ui, CommandMenu) {
-                var menu = ui.create('CommandMenu', {
+                var menu = ui.create('FcCommandMenu', {
                     datasource: [
                         { 
                             text: '修改创意文字', 
@@ -126,7 +126,7 @@
                     menu.disableItemByValue(item.value);
                 });
 
-                var menu2 = ui.create('CommandMenu', {
+                var menu2 = ui.create('FcCommandMenu', {
                     datasource: [
                         { 
                             text: '修改创意文字', 

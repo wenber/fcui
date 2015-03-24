@@ -64,7 +64,7 @@ define(
         };
 
         require('../lib').inherits(MaxByteLengthRule, Rule);
-        require('../main').registerRule(MaxByteLengthRule, 100);
+        require('../main').registerRule(MaxByteLengthRule, 110);
         return MaxByteLengthRule;
     }
 );

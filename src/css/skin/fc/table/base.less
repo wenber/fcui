@@ -3,21 +3,21 @@
  * @author Han Bing Feng (hanbingfeng@baidu.com)
  */
 // FCUI Table的DOM结构
-// div.ui-table
-//   table.ui-table-table
-//     thead.ui-table-thead
-//       th.ui-table-hcell
-//         div.ui-table-hcell-text
-//         div.ui-table-hcell-extra
-//     tbody.ui-table-tbody
-//       tr.ui-table-row
-//         td.ui-table-cell
-//           div.ui-table-cell-text
-//           div.ui-table-cell-extra
+// div.ui-fctable
+//   table.ui-fctable-table
+//     thead.ui-fctable-thead
+//       th.ui-fctable-hcell
+//         div.ui-fctable-hcell-text
+//         div.ui-fctable-hcell-extra
+//     tbody.ui-fctable-tbody
+//       tr.ui-fctable-row
+//         td.ui-fctable-cell
+//           div.ui-fctable-cell-text
+//           div.ui-fctable-cell-extra
 
 /**
  * 设置table单元格样式
- * &指代 ui-table-cell，ui-table-hcell, ui-table-fcell
+ * &指代 ui-fctable-cell，ui-fctable-hcell, ui-fctable-fcell
  */
 .set-cells() {
     padding: 0;
@@ -46,9 +46,9 @@
 
     &:first-child {
         // 第一个单元格左padding是10
-        .ui-table-cell-text,
-        .ui-table-hcell-text,
-        .ui-tablefcell-text {
+        .ui-fctable-cell-text,
+        .ui-fctable-hcell-text,
+        .ui-fctablefcell-text {
             padding-left: 10px;
         }
     }
@@ -72,7 +72,7 @@
 
 /**
  * 设置table表头区域样式。
- * &指代 ui-table
+ * &指代 ui-fctable
  */
 .set-table-head() {
     &-thead {
@@ -80,7 +80,7 @@
         border-bottom: 1px solid @skin-fc-shadow-color;
 
         tr {
-            .ui-table-hcell {
+            .ui-fctable-hcell {
                 .set-cells();
                 font-weight: bold;
                 vertical-align: top;
@@ -92,13 +92,13 @@
 
 /**
  * 设置table表格体区域样式。
- * &指代 ui-table
+ * &指代 ui-fctable
  */
 .set-table-body() {
     &-tbody {
         background: @skin-fc-bg-color-white;
 
-        .ui-table-row {
+        .ui-fctable-row {
             border-bottom: 1px solid @skin-fc-border-color-light;
 
             &:hover {
@@ -109,8 +109,8 @@
                 background: @skin-fc-bg-color-selected;
             }
 
-            .ui-table-cell {
-                .ui-table-cell {
+            .ui-fctable-cell {
+                .ui-fctable-cell {
                     &-max-width {
                         overflow: hidden;
                     }
@@ -130,7 +130,7 @@
             }
 
             &-summary {
-                .ui-table-cell {
+                .ui-fctable-cell {
                     background-color: @skin-fc-bg-color-gray-light;
                     &-text {
                         padding: 12px 5px;
@@ -146,25 +146,27 @@
 
 /**
  * 设置table表格尾区域样式
- * &指代 ui-table
+ * &指代 ui-fctable
  */
 .set-table-foot() {
     &-tfoot {
         background: @skin-fc-bg-color-white;
         border-bottom: 2px solid @skin-fc-shadow-color;
-        .ui-table-foot-row {
+        .ui-fctable-foot-row {
             &:hover {
                 background: @skin-fc-bg-color-hover-blue;
             }
-            .ui-table-fcell {
+            .ui-fctable-fcell {
                 .set-cells();
             }
         }
     }
 }
 
-.ui-table {
+.ui-fctable {
     overflow-x: auto;
+    overflow-y: visible;
+    height: auto;
     
     &-has-max-height {
         overflow-y: auto;
@@ -173,29 +175,31 @@
     }
 
     &-has-vborder {
-        .ui-table-col {
+        .ui-fctable-col {
             border-right: 1px solid @skin-fc-border-color-light;
         }
     }
 
     &-no-foot {
-        .ui-table-tbody {
+        .ui-fctable-tbody {
             border-bottom: 2px solid @skin-fc-shadow-color;
         }
     }
 
     &-no-head {
-        .ui-table-tbody {
+        .ui-fctable-tbody {
             border-top: 2px solid @skin-fc-shadow-color;
         }
     }
 
-    .ui-table {
+    .ui-fctable {
         &-table,
         &-cover-table {
             table-layout: auto;
             border-collapse: collapse;
             width: 100%;
+            // IE9 下，table会莫名出现竖滚动条，去掉它
+            margin-bottom: 1px;
         }
 
         .set-table-head();
@@ -204,7 +208,7 @@
     }
 
     &-has-max-height {
-        .ui-table-cover-table {
+        .ui-fctable-cover-table {
             table-layout: fixed;
             position: absolute;
             top: 0;
@@ -213,16 +217,17 @@
     }
 
     &-fix-head {
-        .ui-table-cover-table {
+        .ui-fctable-cover-table {
             &-wrapper {
                 position: fixed;
                 display: none;
+                overflow-x: hidden;
             }
         }
     }
 
     &-head-fixing {
-        .ui-table-cover-table {
+        .ui-fctable-cover-table {
             &-wrapper {
                 display: block;
             }
@@ -234,13 +239,13 @@
         text-align: center;
         padding: 50px 0;
 
-        .ui-table-no-data-message {
+        .ui-fctable-no-data-message {
             display: inline-block;
             border: 1px solid @skin-fc-shadow-color;
             line-height: 50px;
             padding: 0 20px;
             color: @skin-fc-text-color-gray-dark;
-            .ui-table-no-data-icon {
+            .ui-fctable-no-data-icon {
                 &:after {
                     #skin-fc-mixin > .use-font-icon(@font-icon-desktop);
                 }

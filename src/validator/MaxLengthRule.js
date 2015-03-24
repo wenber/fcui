@@ -91,7 +91,7 @@ define(
         };
 
         require('../lib').inherits(MaxLengthRule, Rule);
-        require('../main').registerRule(MaxLengthRule, 100);
+        require('../main').registerRule(MaxLengthRule, 105);
         return MaxLengthRule;
     }
 );

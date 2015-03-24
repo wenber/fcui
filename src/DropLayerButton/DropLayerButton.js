@@ -11,6 +11,7 @@
  *     width: 按钮宽，
  *     autoClose：是否自动关闭，
  *     dockPosition: layer的位置，参考dom.dock()
+ *     dockOptions: layer的位置其他参数，参考dom.dock()
  *     title: layer的title，
  *     hideTitle: true时，隐藏title，
  *     hideFooter: true时，隐藏footer，
@@ -36,13 +37,11 @@ define(function (require) {
     var fc = require('fc-core');
     var ui = require('../main');
     var lib = require('../lib');
-    var CommandMenu = require('../CommandMenu');
+    var CommandMenu = require('../FcCommandMenu');
     var Control = require('../Control');
     var DropLayer = require('./DropLayer');
 
-    var _engine = new fc.tpl.Engine();
     var _template = require('./template.tpl');
-    _engine.compile(_template);
 
     /**
      * 点击按钮出浮层控件
@@ -61,7 +60,8 @@ define(function (require) {
             engine = options.templateEngine;
         }
         else {
-            engine = _engine;
+            engine = new fc.tpl.Engine();
+            engine.compile(_template);
         }
 
         this.helper.setTemplateEngine(engine);

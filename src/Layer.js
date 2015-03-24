@@ -7,6 +7,7 @@
  * @author Feixiang Yuan(yuanfeixiang@baidu.com)
  * @date 2014-12-02
  */
+
 define(
     function(require) {
         var u = require('underscore');
@@ -72,8 +73,7 @@ define(
          * @return {HTMLElement}
          */
         Layer.prototype.create = function () {
-            var element = 
-                this.control.helper.createPart('layer', this.nodeName);
+            var element = this.control.helper.createPart('layer', this.nodeName);
             lib.addClass(element, 'ui-layer');
             return element;
         };
@@ -143,7 +143,9 @@ define(
                 this.control.helper.addDOMEvent(
                     element,
                     'mousedown',
-                    function (e) { e.stopPropagation(); }
+                    function (e) {
+                        e.stopPropagation();
+                    }
                 );
 
                 this.syncState(element);
@@ -175,7 +177,7 @@ define(
         Layer.prototype.show = function () {
             var element = this.getElement();
             element.style.zIndex = this.getZIndex();
-            
+
             this.position();
 
             var classes = getHiddenClasses(this);
@@ -203,10 +205,8 @@ define(
          * 放置层
          */
         Layer.prototype.position = function () {
-            if (this.dock) {
-                var element = this.getElement();
-                Layer.attachTo(element, this.control.main, this.dock);
-            }
+            var element = this.getElement();
+            Layer.attachTo(element, this.control.main, this.dock);
         };
 
         /**
@@ -259,8 +259,7 @@ define(
         Layer.getZIndex = function (owner) {
             var zIndex = 0;
             while (!zIndex && owner && owner !== document) {
-                zIndex = 
-                    parseInt(lib.getComputedStyle(owner, 'zIndex'), 10);
+                zIndex = parseInt(lib.getComputedStyle(owner, 'zIndex'), 10);
                 owner = owner.parentNode;
             }
             zIndex = zIndex || 0;
@@ -286,7 +285,7 @@ define(
          * @static
          */
         Layer.moveTo = function (element, top, left) {
-            positionLayerElement(element, { top: top, left: left });
+            positionLayerElement(element, {top: top, left: left});
         };
 
         /**
@@ -298,7 +297,7 @@ define(
          * @static
          */
         Layer.resize = function (element, width, height) {
-            positionLayerElement(element, { width: width, height: height });
+            positionLayerElement(element, {width: width, height: height});
         };
 
         /**
@@ -309,7 +308,7 @@ define(
          * @return {boolean}
          */
         function isInElements(elements, target) {
-            for (var e = target; !!e; e = e.parentNode) {
+            for (var e = target; e; e = e.parentNode) {
                 for (var i in elements) {
                     if (e === elements[i]) {
                         return true;
@@ -325,8 +324,8 @@ define(
          *
          * @param {Array.<Object>} elements dom元素集合
          * @param {number} delay 延时
-         * @param {function(Event)} mouseEnterCallback
-         * @param {function(Event)} mouseLeaveCallback
+         * @param {function(Event)} mouseEnterCallback callback
+         * @param {function(Event)} mouseLeaveCallback callback
          */
         Layer.delayHover = function (
             elements, delay, mouseEnterCallback, mouseLeaveCallback
@@ -366,32 +365,30 @@ define(
                     mouseoutTimeout = null;
                 }, delay);
             };
-            for (var i in elements) {
-                var ele = elements[i];
+            u.each(elements, function (ele) {
                 lib.on(ele, 'mouseover', mouseoverHandler);
                 lib.on(ele, 'mouseout', mouseoutHandler);
-            }
+            });
         };
 
         /**
          * 摧毁事件
-         * TODO(yuanfeixiang) 现在将移除所有的mouseover/mouseout事件 
+         * TODO(yuanfeixiang) 现在将移除所有的mouseover/mouseout事件
          *      改为按需移除事件监听
          *
          * @param {Array.<Object>} elements dom元素集合
          */
         Layer.delayHoverDispose = function (elements) {
-            for (var i in elements) {
-                var ele = elements[i];
+            u.each(elements, function (ele) {
                 lib.un(ele, 'mouseover');
                 lib.un(ele, 'mouseout');
-            }
+            });
         };
 
         /**
          * 让当前层靠住一个指定的元素
          *
-         * @param {HTMLElement} element 目标层元素
+         * @param {HTMLElement} layer 目标层元素
          * @param {HTMLElement} target 目标元素
          * @param {Object} [options] 停靠相关的选项
          * @param {string} [options.top] 指示当前层的上边缘靠住元素的哪个边，
@@ -409,138 +406,78 @@ define(
          * 会检测这个方向上是否有足够的空间放置层，如空间不够则向反方向放置
          * @static
          */
-        Layer.attachTo = function (element, target, options) {
-            options = options || { left: 'left', top: 'top' };
+        Layer.attachTo = function (layer, target, options) {
+            options = options || {strictWidth: false};
+            // 垂直算法：
+            //
+            // 1. 将层的上边缘贴住目标元素的下边缘
+            // 2. 如果下方空间不够，则转为层的下边缘贴住目标元素的上边缘
+            // 3. 如果上方空间依旧不够，则强制使用第1步的位置
+            //
+            // 水平算法：
+            //
+            // 1. 如果要求层和目标元素等宽，则设置宽度，层的左边缘贴住目标元素的左边缘，结束
+            // 2. 将层的左边缘贴住目标元素的左边缘
+            // 3. 如果右侧空间不够，则转为层的右边缘贴住目标元素的右边缘
+            // 4. 如果左侧空间依旧不够，则强制使用第2步的位置
+
             // 虽然这2个变量下面不一定用得到，但是不能等层出来了再取，
             // 一但层出现，可能造成滚动条出现，导致页面尺寸变小
             var pageWidth = lib.page.getViewWidth();
             var pageHeight = lib.page.getViewHeight();
+            var pageScrollTop = lib.page.getScrollTop();
+            var pageScrollLeft = lib.page.getScrollLeft();
+
+            // 获取目标元素的属性
+            var targetOffset = lib.getOffset(target);
 
             // 浮层的存在会影响页面高度计算，必须先让它消失，
             // 但在消失前，又必须先计算到浮层的正确高度
-            var previousDisplayValue = element.style.display;
-            element.style.display = 'block';
-            element.style.top = '-5000px';
-            element.style.left = '-5000px';
+            var previousDisplayValue = layer.style.display;
+            layer.style.display = 'block';
+            layer.style.top = '-5000px';
+            layer.style.left = '-5000px';
+            // 如果对层宽度有要求，则先设置好最小宽度
+            if (options.strictWidth) {
+                layer.style.minWidth = targetOffset.width + 'px';
+            }
             // IE7下，如果浮层隐藏着反而会影响offset的获取，
             // 但浮层显示出来又可能造成滚动条出现，
             // 因此显示浮层显示后移到屏幕外面，然后计算坐标
-            var offset = lib.getOffset(target);
+            var layerOffset = lib.getOffset(layer);
             // 用完改回来再计算后面的
-            element.style.top = '';
-            element.style.left = '';
-            var elementHeight = element.offsetHeight;
-            var elementWidth = element.offsetWidth;
-            element.style.display = previousDisplayValue;
+            layer.style.top = '';
+            layer.style.left = '';
+            layer.style.display = previousDisplayValue;
 
-            // 有2种特殊的情况：
-            // 
-            // -`{ top: 'top', bottom: 'bottom' }`
-            // -`{ left: 'left', right: 'right' }`
-            // 
-            // 这两种情况下，要计算出宽和高来，且覆盖掉提供的宽高
-            var config = lib.clone(options);
-            // 如果要靠住某一边，且要检测剩余空间，则那个边空间不够，就要移到另一边
-            if (config.spaceDetection === 'vertical'
-                || config.spaceDetection === 'both') {
-                // 对纵向的策略如下：
-                // 
-                // - 如果指定`top === 'bottm'`，则尝试放下面，放不了就放上面
-                // - 如果指定`bottom === 'top'`，则尝试放上面，放不下就放下面
-                // - 如果指定`top === 'top'`，则尝试上边对齐，不行就下边对齐
-                // - 如果指定`bottom === 'bottom`'，则尝试下边对齐，不行就上边对齐
-                if (config.top === 'bottom') {
-                    if (pageHeight - offset.bottom <= elementHeight) {
-                        config.top = null;
-                        config.bottom = 'top';
-                    }
-                }
-                else if (config.bottom === 'top') {
-                    if (offset.top <= elementHeight) {
-                        config.top = 'bottom';
-                        config.bottom = null;
-                    }
-                }
-                else if (config.top === 'top') {
-                    if (pageHeight - offset.top <= elementHeight) {
-                        config.top = null;
-                        config.bottom = 'bottom';
-                    }
-                }
-                else if (config.bottom === 'bottom') {
-                    if (offset.bottom <= elementHeight) {
-                        config.top = 'top';
-                        config.bottom = null;
-                    }
-                }
-            }
-            if (config.spaceDetection === 'horizontal'
-                || config.spaceDetection === 'both') {
-                // 对横向的策略如下：
-                // 
-                // - 如果指定`left === 'right'`，则尝试放右边，放不了就放左边
-                // - 如果指定`right === 'left'`，则尝试放左边，放不下就放右边
-                // - 如果指定`left === 'left'`，则尝试左边对齐，不行就右边对齐
-                // - 如果指定`right === 'right`'，则尝试右边对齐，不行就左边对齐
-                if (config.left === 'right') {
-                    if (pageWidth - offset.right <= elementWidth) {
-                        config.left = null;
-                        config.right = 'left';
-                    }
-                }
-                else if (config.right === 'left') {
-                    if (offset.left <= elementWidth) {
-                        config.left = 'right';
-                        config.right = null;
-                    }
-                }
-                else if (config.left === 'left') {
-                    if (pageWidth - offset.left <= elementWidth) {
-                        config.left = null;
-                        config.right = 'right';
-                    }
-                }
-                else if (config.right === 'right') {
-                    if (offset.right <= elementWidth) {
-                        config.left = 'left';
-                        config.right = null;
-                    }
-                }
-            }
-
-            if (config.top === 'top' && config.bottom === 'bottom') {
-                config.height = offset.height;
-                config.bottom = null;
-            }
-            if (config.left === 'left' && config.right === 'right') {
-                config.width = offset.width;
-                config.right = null;
-            }
 
             var properties = {};
-            if (config.width) {
-                properties.width = config.width;
+
+            // 先算垂直的位置
+            var bottomSpace = pageHeight - (targetOffset.bottom - pageScrollTop);
+            var topSpace = targetOffset.top - pageScrollTop;
+            if (bottomSpace <= layerOffset.height && topSpace > layerOffset.height) {
+                // 放上面
+                properties.top = targetOffset.top - layerOffset.height;
             }
-            if (config.height) {
-                properties.height = config.height;
+            else {
+                // 放下面
+                properties.top = targetOffset.bottom;
             }
 
-            if (config.left) {
-                properties.left = offset[config.left];
+            // 再算水平的位置
+            var rightSpace = pageWidth - (targetOffset.left - pageScrollLeft);
+            var leftSpace = targetOffset.right - pageScrollLeft;
+            if (rightSpace <= layerOffset.width && leftSpace > layerOffset.width) {
+                // 靠右侧
+                properties.left = targetOffset.right - layerOffset.width;
             }
-            else if (config.right) {
-                properties.left = offset[config.right] - elementWidth;
-            }
-
-            if (config.top) {
-                properties.top = offset[config.top];
-            }
-            else if (config.bottom) {
-                properties.top = offset[config.bottom] - elementHeight;
+            else {
+                // 靠左侧
+                properties.left = targetOffset.left;
             }
 
-            element.style.display = previousDisplayValue;
-            positionLayerElement(element, properties);
+            positionLayerElement(layer, properties);
         };
 
         /**
@@ -569,25 +506,19 @@ define(
             properties.left = (lib.page.getViewWidth() - properties.width) / 2;
 
             var viewHeight = lib.page.getViewHeight();
-            if (properties.height >= viewHeight && 
-                options.hasOwnProperty('minTop')
-            ) {
+            if (properties.height >= viewHeight && options.hasOwnProperty('minTop')) {
                 properties.top = options.minTop;
             }
             else {
-                properties.top = 
-                    Math.floor((viewHeight - properties.height) / 2);
+                properties.top = Math.floor((viewHeight - properties.height) / 2);
             }
 
             var viewWidth = lib.page.getViewWidth();
-            if (properties.height >= viewWidth && 
-                options.hasOwnProperty('minLeft')
-            ) {
+            if (properties.height >= viewWidth && options.hasOwnProperty('minLeft')) {
                 properties.left = options.minLeft;
             }
             else {
-                properties.left = 
-                    Math.floor((viewWidth - properties.width) / 2);
+                properties.left = Math.floor((viewWidth - properties.width) / 2);
             }
 
             properties.top += lib.page.getScrollTop();

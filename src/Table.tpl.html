@@ -17,7 +17,7 @@
     class="${table | class} ${cover-table | class}"
     style="z-index: ${getCoverZIndex | call};"
     >
-    <colgroup id="${cover-colgroup | id}""></colgroup>
+    <colgroup id="${cover-colgroup | id}"></colgroup>
     <thead id="${cover-thead | id}" class="${thead | class} ${cover-thead | class}"></thead>
 </table>
 <!-- if: ${fixHeadAtTop} -->
@@ -356,9 +356,10 @@ ${renderHeadTextContent | call(${field}, ${columnIndex})}
 
 <!-- target: table-no-data -->
 <!-- // 表格体不含有数据时候的内容 -->
+<!-- // @param noDataHtml 表格体不含有数据时候显示的内容 -->
 <tr>
     <td class="${no-data | class}" colspan="${fieldsLength}">
-        <div class="${no-data-message | class}"><span class="${no-data-icon | class}"></span>没有数据</div>
+        <div class="${no-data-message | class}"><span class="${no-data-icon | class}"></span>${noDataHtml | raw}</div>
     </td>
 </tr>
 

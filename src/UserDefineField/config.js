@@ -22,7 +22,7 @@ define(function () {
         +   '<div class="top-info">'
         +       '<div id="user-define-field-tab-wrap-${id}" class="ui-userdefine-user-define-field-tab-wrap"></div>'
         +       '<div data-ui="type:Tip;id:user-define-field;content:' 
-        +           config.tip + ';"></div>'
+        +           config.tip + ';iconType:i;"></div>'
         +   '</div>'
         +   '<div class="included-list-wrap">'
         +       '<p>已添加<span>（点击<span class="font-icon font-icon-times">' 

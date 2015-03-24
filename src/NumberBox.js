@@ -142,17 +142,32 @@ define(
         };
 
         /**
+         * 获取placeholder的HTML片段
+         * @return {string} HTML片段
+         */
+        NumberBox.prototype.getPlaceholderHTML = function () {
+            var helper = this.helper;
+            var html = ''
+                + '<div id="' + helper.getId('input-placeholder')
+                + '" class="' + this.getPartClasses('input-placeholder')
+                + '">' + this.placeholder + '</div>';
+            return html;
+        };
+
+        /**
          * 获取html片段
          *
          * @return {string} html片段
          */
         NumberBox.prototype.getMainHTML = function () {
             var helper = this.helper;
+            var tipString = this.getTip();
             // 写这么多html是因为模板加载跨域的问题
             var htmlStr = ''
                 + '<div id="' + helper.getId('wrapper')
                 + '" class="' + this.getPartClasses('wrapper') + '">'
                 +    '<div class="' + this.getPartClasses('main-content') + '">'
+                +       this.getPlaceholderHTML()
                 +       '<input id="' + helper.getId('input') + '" class="'
                 +           this.getPartClasses('input') + '"/>'
                 +       '<div id="' + helper.getId('arrow-wrapper')
@@ -171,6 +186,11 @@ define(
                 +                   'font-icon-caret-down"></i>'
                 +            '</div>'
                 +        '</div>'
+                +        '<div id="' + helper.getId('tip') + '" class="'
+                +            this.getPartClasses('range-tip')
+                +            ' ' + HIDE_CLASS + '">'
+                +            tipString
+                +        '</div>'
                 +    '</div>'
                 + '</div>';
             return htmlStr;
@@ -187,6 +207,32 @@ define(
         };
 
         /**
+         * 获取提示字符串
+         *
+         * @return {string} 提示信息
+         */
+        NumberBox.prototype.getTip = function () {
+            // 没有最小值的时候
+            var str = '有效范围:';
+            if (this.min !== Number.NEGATIVE_INFINITY
+                && this.max !== Number.POSITIVE_INFINITY) {
+                str += this.min + '~' + this.max;
+            }
+            else if (this.min === Number.NEGATIVE_INFINITY
+                && this.max === Number.POSITIVE_INFINITY) {
+                str = '';
+            }
+            else if (this.min === Number.NEGATIVE_INFINIT) {
+                str += '小于' + this.max;
+            }
+            else {
+                str += '大于' + this.min;
+            }
+            return str;
+        };
+
+
+        /**
          * 初始化DOM结构
          *
          * @protected
@@ -197,8 +243,6 @@ define(
             this.main.innerHTML = this.getMainHTML();
             // 创建控件树
             helper.initChildren();
-            var input = helper.getPart('input');
-            input.placeholder = this.placeholder;
         };
 
         /**
@@ -218,7 +262,18 @@ define(
                 'click',
                 this.onArrowClick()
             );
+            helper.addDOMEvent(
+                helper.getPart('input-placeholder'),
+                'click',
+                _.bind(this.onPlaceholderClick, this)
+            );
             this.on('inputchange', this.enableOrDisableArrowHandler);
+        };
+
+        NumberBox.prototype.onPlaceholderClick = function () {
+            this.hidePlaceholder();
+            var input = this.helper.getPart('input');
+            input.focus();
         };
 
         /**
@@ -229,13 +284,13 @@ define(
             var value = this.getValue();
             var arrowDown = helper.getPart('arrow-down');
             var arrowUp = helper.getPart('arrow-up');
-            if (+value <= +this.min) {
+            if (+value <= +this.min || isNaN(+value) || trim(value).length === 0) {
                 helper.addPartClasses('arrow-down-disabled', arrowDown);
             }
             else {
                 helper.removePartClasses('arrow-down-disabled', arrowDown);
             }
-            if (+value >= +this.max) {
+            if (+value >= +this.max || isNaN(+value) || trim(value).length === 0) {
                 helper.addPartClasses('arrow-up-disabled', arrowUp);
             }
             else {
@@ -263,6 +318,26 @@ define(
         };
 
         /**
+         * 隐藏placeholder
+         */
+        NumberBox.prototype.hidePlaceholder = function () {
+            lib.addClasses(
+                this.helper.getPart('input-placeholder'),
+                [HIDE_CLASS]
+            );
+        };
+
+        /**
+         * 显示placeholder
+         */
+        NumberBox.prototype.showPlaceholder = function () {
+            lib.removeClasses(
+                this.helper.getPart('input-placeholder'),
+                [HIDE_CLASS]
+            );
+        };
+
+        /**
          * input变化时候的事件
          *
          * @return {Function} 事件处理函数
@@ -282,11 +357,16 @@ define(
         NumberBox.prototype.onInputFocus = function () {
             var me = this;
             return function () {
+                me.fire('inputfocus');
+                me.hidePlaceholder();
                 if (me.isShowTimelyTip) {
-                    // 否则提示跟错误会冲突
-                    me.hideError();
-                    me.isOnFocus = true;
+                    if (me.validate()) {
+                        me.showRangeTip();
+                        // 否则提示跟错误会冲突
+                        me.hideError();
+                    }
                 }
+                me.isOnFocus = true;
             };
         };
 
@@ -300,6 +380,14 @@ define(
         };
 
         /**
+         * @param {string} str 要处理的字符串
+         * @return {sting} str 处理完的字符串
+         */
+        function trim(str) {
+            return String(str).replace(/^[\s\xa0\u3000]+|[\u3000\xa0\s]+$/g, '');
+        }
+
+        /**
          * input 获取blur的事件
          *
          * @return {Function} blur处理事件
@@ -307,6 +395,12 @@ define(
         NumberBox.prototype.onInputBlur = function () {
             var me = this;
             return function () {
+                me.fire('inputblur');
+                me.hideRangeTip();
+                var val = trim(me.getValue());
+                if (val.length === 0 && me.placeholder) {
+                    me.showPlaceholder();
+                }
                 me.isOnFocus = false;
                 me.setValue(me.fixValue(me.helper.getPart('input').value));
             };
@@ -334,6 +428,33 @@ define(
                 value = fixNumber(value, this.decimalPlace);
             }
             return value;
+        };
+
+        /**
+         * 隐藏范围提示
+         */
+        NumberBox.prototype.hideRangeTip = function () {
+            lib.addClasses(
+                this.helper.getPart('tip'),
+                [HIDE_CLASS]
+            );
+        };
+
+        /**
+         * 显示范围提示
+         */
+        NumberBox.prototype.showRangeTip = function () {
+            lib.removeClasses(
+                this.helper.getPart('tip'),
+                [HIDE_CLASS]
+            );
+        };
+
+        /**
+         * 输入非法时候的处理
+         */
+        NumberBox.prototype.oninvalid = function () {
+            this.hideRangeTip();
         };
 
         /**
@@ -374,7 +495,7 @@ define(
             {
                 name: 'placeholder',
                 paint: function (NumberBox, value) {
-                    NumberBox.helper.getPart('input').placeholder = value;
+                    NumberBox.helper.getPart('input-placeholder').innerHTML = value;
                 }
             },
             {

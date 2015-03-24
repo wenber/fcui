@@ -2,12 +2,12 @@
  * FCUI Table 皮肤，表格编辑
  * @author Han Bing Feng (hanbingfeng@baidu.com)
  */
-.ui-table {
-    .ui-table-tbody {
-        .ui-table-row {
-            .ui-table-cell.ui-table-cell:hover.ui-table-cell-editable {
+.ui-fctable {
+    .ui-fctable-tbody {
+        .ui-fctable-row.ui-fctable-row:hover {
+            .ui-fctable-cell-editable {
                 padding: 0 1px;
-                .ui-table-cell-text {
+                .ui-fctable-cell-text {
                     line-height: 16px;
                     background: @skin-fc-bg-color-white;
                     #skin-fc-mixin > .border-radius(2px);
@@ -16,7 +16,7 @@
                     border: 1px solid @skin-fc-shadow-color;
                     position: relative;
 
-                    .ui-table-cell-edit-entry {
+                    .ui-fctable-cell-edit-entry {
                         &:after {
                             color: @skin-fc-text-color-blue;
                             #skin-fc-mixin > .use-font-icon(@font-icon-edit);
@@ -29,14 +29,14 @@
                 }
             }
 
-            .ui-table-cell-editable {
-                .ui-table-cell-edit-entry {
+            .ui-fctable-cell-editable {
+                .ui-fctable-cell-edit-entry {
                     top: 3px;
                     right: 4px;
                 }
             }
-            .ui-table-cell-align-right.ui-table-cell-editable {
-                .ui-table-cell-edit-entry {
+            .ui-fctable-cell-align-right.ui-fctable-cell-editable {
+                .ui-fctable-cell-edit-entry {
                     left: 4px;
                     right: auto;
                 }
@@ -52,11 +52,11 @@
         border: 1px solid @skin-fc-text-color-gray-light;
         padding: 10px;
 
-        .ui-table-edit-control-wrapper {
+        .ui-fctable-edit-control-wrapper {
             .fl();
         }
 
-        .ui-table-edit-buttons-wrapper {
+        .ui-fctable-edit-buttons-wrapper {
             .fl();
 
             .ui-button {
@@ -66,7 +66,7 @@
             }
         }
 
-        .ui-table-edit-validities-wrapper {
+        .ui-fctable-edit-validities-wrapper {
             clear: both;
             padding-top: 5px;
         }

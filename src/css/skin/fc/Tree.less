@@ -11,14 +11,19 @@
         height: 30px;
         line-height: 30px;
         
+        .@{skin-fc-prefix}-tree-node-indicator-empty,
+        .@{skin-fc-prefix}-tree-node-indicator-collapsed,
+        .@{skin-fc-prefix}-tree-node-indicator-expanded {
+            width: 16px;
+            height: 16px;
+            margin: 7px 6px 7px 0;
+        }
+        
         .@{skin-fc-prefix}-tree-node-indicator-collapsed,
         .@{skin-fc-prefix}-tree-node-indicator-expanded {
             &:extend(.font-icon);
             background-image: none;
             text-indent: 0;
-            width: 16px;
-            height: 16px;
-            margin: 7px 10px 7px 0;
         }
         
         .@{skin-fc-prefix}-tree-node-indicator-collapsed:before {

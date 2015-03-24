@@ -66,7 +66,7 @@ define(function (require) {
             fieldsConf: [],
             forbidRemoveFields: [],
             storedFields: [],
-            dockPosition: lib.DockPosition.TOP_BOTTOM_LEFT_LEFT,
+            dockPosition: lib.DockPosition.TOP_BOTTOM_RIGHT_RIGHT,
             disabled: false
         };
         underscore.extend(properties, options);
@@ -358,7 +358,10 @@ define(function (require) {
                 id: me.helper.getId()
             }),
             autoClose: true,
-            dockPosition: this.dockPosition
+            dockPosition: this.dockPosition,
+            dockOptions: {
+                detectSpace: false
+            }
         });
         dropLayerButton.appendTo(me.main);
         dropLayerButton.layer.control.on('confirm', me.confirm, me);

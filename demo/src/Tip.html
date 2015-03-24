@@ -133,9 +133,9 @@
         require(
             [
                 'fcui',
-                'fcui/Tip',
-                'fcui/TipLayer',
-                'fcui/Label',
+                'fcui/FcTip',
+                'fcui/FcTipLayer',
+                'fcui/FcLabel',
                 'fcui/lib',
                 'fcui/extension/FcUiSkin',
                 'fc-core/Promise'
@@ -149,7 +149,7 @@
                     targetDOM: 'tip-layer-label'
                 });
 
-                var tipLayer = ui.create('TipLayer', {
+                var tipLayer = ui.create('FcTipLayer', {
                     title: '最普通的提示',
                     content: '随便提示一下随便提示一下随便提示一下'
                 });
@@ -204,7 +204,7 @@
                     positionOpt: 12
                 });
 
-                var delayTip = ui.create('Tip', {
+                var delayTip = ui.create('FcTip', {
                     title: '延迟提示',
                     content: function () {
                         return new p(function (resolve) {
