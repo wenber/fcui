@@ -12,7 +12,7 @@ define(
         var lib = require('../../lib');
         var fcui = require('../../main');
         var Extension = require('../../Extension');
-        var Sidebar = require('../../Sidebar');
+        var Sidebar = require('../../FcSidebar');
         
         /**
          * Sidebar组合手风琴

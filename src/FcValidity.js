@@ -7,8 +7,7 @@
  * @author otakustay
  */
 
-define(
-    function (require) {
-        return require('esui/Validity');
-    }
-);
+define(function (require) {
+    return require('fcui/main').alias('FcValidity', require('esui/Validity'));
+});
+

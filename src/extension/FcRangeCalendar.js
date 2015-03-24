@@ -10,7 +10,7 @@ define(function (require) {
     var moment = require('moment');
     var lib = require('../lib');
     var helper = require('../controlHelper');
-    var RangeCalendar = require('../RangeCalendar');
+    var RangeCalendar = require('../FcRangeCalendar');
     var Extension = require('../Extension');
 
     /**

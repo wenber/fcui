@@ -95,7 +95,7 @@ ${renderHeadTextContent | call(${field}, ${columnIndex})}
 <!-- // @param field -->
 <!-- // @param columnIndex -->
 <div class="${htip | class}"
-    data-ui-type="Tip"
+    data-ui-type="FcTip"
     data-ui-id="${getTipId | call(${field})}"
 <!-- if: ${field.tip} -->
     data-ui-content="${renderTipContent | call(${field}, ${columnIndex})}">
@@ -308,11 +308,11 @@ ${renderHeadTextContent | call(${field}, ${columnIndex})}
     <!-- block: inputControls --><!-- /block -->
 </div>
 <div class="${edit-buttons-wrapper | class}">
-    <span data-ui-type="Button"
+    <span data-ui-type="FcButton"
         data-ui-skin="ui-fc-important"
         data-ui-child-name="okButton"
         class="${edit-ok-button | class}">确定</span>
-    <span data-ui-type="Button"
+    <span data-ui-type="FcButton"
         data-ui-child-name="cancelButton"
         class="${edit-cancel-button | class}">取消</span>
 </div>
@@ -322,10 +322,10 @@ ${renderHeadTextContent | call(${field}, ${columnIndex})}
 
 <!-- target: table-edit-text(master = table-edit-master) -->
 <!-- block: inputControls -->
-<input data-ui-type="TextBox" data-ui-child-name="inputControl" />
+<input data-ui-type="FcTextBox" data-ui-child-name="inputControl" />
 <!-- /block -->
 <!-- block: validities -->
-<label data-ui-type="Validity" data-ui-child-name="inputControlValid"></label>
+<label data-ui-type="FcValidity" data-ui-child-name="inputControlValid"></label>
 <!-- /block -->
 
 <!-- target: table-foot -->

@@ -12,10 +12,10 @@ define(function (require) {
     var eoo = require('eoo');
     var fc = require('fc-core');
 
-    require('./TipLayer');
-    require('./Panel');
-    require('./Button');
-    require('./TextBox');
+    require('./FcTipLayer');
+    require('./FcPanel');
+    require('./FcButton');
+    require('./FcTextBox');
 
     require('./lib/detect-element-resize');
 
@@ -831,7 +831,7 @@ define(function (require) {
             var field = this.realFields[columnIndex];
             var me = this;
             if (field.sortField || !this.plainSort) {
-                var tipLayer = ui.create('TipLayer', {
+                var tipLayer = ui.create('FcTipLayer', {
                     id: this.getSortLayerId(field),
                     content: this.getSortLayerContent(columnIndex),
                     layerClasses: this.helper.getPartClasses('sort-layer'),
@@ -1934,7 +1934,7 @@ define(function (require) {
         // 先将其它编辑器隐藏掉
         var groupName = this.getGroupName('body.texteditor');
         if (!editor) {
-            editor = ui.create('Panel', u.extend({
+            editor = ui.create('FcPanel', u.extend({
                 parent: this,
                 group: groupName,
                 show: function () {

@@ -7,7 +7,7 @@ define(function (require, exports, module) {
     var lib = require('../../lib');
     var fcui = require('../../main');
     var Extension = require('../../Extension');
-    var Sidebar = require('../../Sidebar');
+    var Sidebar = require('../../FcSidebar');
 
     require('../../Select');
 

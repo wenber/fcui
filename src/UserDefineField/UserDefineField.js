@@ -9,8 +9,8 @@ define(function (require) {
     var lib = require('../lib');
     var ui = require('../main');
     var Control = require('../Control');
-    require('../Tip');
-    require('../Tab');
+    require('../FcTip');
+    require('../FcTab');
     var config = require('./config');
     require('./UserDefineFieldDataSet');
     require('../DropLayerButton/DropLayerButton');
