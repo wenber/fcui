@@ -12,6 +12,17 @@ define(function (require) {
     var main = require('esui/main');
     main.esuiVersion = main.version;
 
+    // ESUI中的4种class：
+    // Control
+    // Extension
+    // Global Extension
+    // Rules
+    // 在ESUI中，它们分别注册在各自的闭包容器中。在fcui/main中，接管了所有4种class的注册和创建，
+    // FCUI的class容器与ESUI的是不同的。若FCUI的初始化比ESUI迟，在两者初始化之间的class，都只注册在
+    // ESUI中而不注册在FCUI的class容器中。当FCUI初始化后，create被接管，当create只存在于ESUI的class
+    // 容器中的物件时，会出错。
+    // 这里fix 4个create方法，同时调用ESUI版本和FCUI版本，并拼接两个返回，或返回不为空的那个结果。
+
     /**
      * 绑定全局扩展
      *
@@ -30,6 +41,8 @@ define(function (require) {
         this.globalExtensionOptions[type] = option || {};
     };
 
+    var esuiCreateGlobalExtensions = main.createGlobalExtensions;
+
     /**
      * 创建全局扩展对象
      * ESUI里的实现有误，修正过来
@@ -44,7 +57,7 @@ define(function (require) {
             extension && extensions.push(extension);
         }, this);
 
-        return extensions;
+        return extensions.concat(esuiCreateGlobalExtensions());
     };
 
     /**
@@ -431,6 +444,8 @@ define(function (require) {
         );
     };
 
+    var esuiCreateRulesByControl = main.createRulesByControl;
+
     /**
      * 创建控件实例需要的验证规则
      *
@@ -446,7 +461,7 @@ define(function (require) {
             }
         }
 
-        return rules;
+        return rules.concat(esuiCreateRulesByControl(control));
     };
 
     /**
