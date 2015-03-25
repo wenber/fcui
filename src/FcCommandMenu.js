@@ -84,7 +84,8 @@ define(
         CommandMenuLayer.prototype.dock = {
             top: 'bottom',
             left: 'left',
-            spaceDetection: 'vertical'
+            spaceDetection: 'vertical',
+            strictWidth: true
         };
 
         CommandMenuLayer.prototype.render = function (element) {

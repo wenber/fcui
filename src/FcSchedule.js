@@ -328,7 +328,7 @@ define(function (require) {
                             timeClass: getClass(me, 'time'),
                             dayIndex: i,
                             timeIndex: j,
-                            rawInfo: me.rawInfo.length ? me.rawInfo[i][j] : ''
+                            rawInfo: me.rawInfo.length ? (me.rawInfo[i] ? me.rawInfo[i][j] : '') : ''
                         }
                     )
                 );
