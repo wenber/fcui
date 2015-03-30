@@ -1624,7 +1624,7 @@ define(function (require) {
                     this._headFixing = false;
                     this.fixTop = null;
                     this.helper.removeStateClasses('head-fixing');
-                    if (this.fixHeight) {
+                    if (this.getTable() && this.fixHeight) {
                         this.getTable().style.marginTop = '';
                     }
                     if (this.fixAtDom) {
