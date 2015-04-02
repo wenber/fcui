@@ -61,6 +61,24 @@ define(function (require) {
         }
 
         this.helper.setTemplateEngine(engine);
+
+        var editRegExp = new RegExp(this.helper.getPartClassName('cell-edit-entry'));
+        this.helper.addDOMEvent(document.getElementsByTagName('body')[0], 'click', function (event) {
+            var groupName = this.getGroupName('body.texteditor');
+            var isEditTrigger = editRegExp.test(event.target.className);
+            var isContained = false;
+            var group = this.viewContext.getGroup(groupName);
+            for (var i = 0, j = group.length; i < j; ++i) {
+                var panelNode = group[i].main;
+                isContained = panelNode.contains(event.target);
+                if (isContained) {
+                    break;
+                }
+            }
+            if (!isEditTrigger && !isContained) {
+                this.viewContext.getGroup(groupName).hide();
+            }
+        });
     };
 
     /**
