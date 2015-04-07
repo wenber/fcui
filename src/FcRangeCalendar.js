@@ -1023,7 +1023,7 @@ define(
                         }
                         calendar.range = range;
                     }
-                    if (rawValue) {
+                    if (calendar.helper.isInStage('RENDERED') && rawValue) {
                         updateMain(calendar, rawValue);
                     }
                     if (calendar.layer) {

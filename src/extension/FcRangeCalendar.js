@@ -224,7 +224,9 @@ define(function (require) {
     function modifyMainText(calendar) {
         var textId = helper.getId(calendar, 'text');
         var dateText = getValueText(calendar);
-        lib.g(textId).innerHTML = dateText;
+        if (lib.g(textId)) {
+            lib.g(textId).innerHTML = dateText;
+        }
     }
 
     /**
@@ -654,7 +656,9 @@ define(function (require) {
                     // 修正，当setRawValue重绘时，当rawValue前后时间相等时，
                     // 只显示一个时间
                     // 这样与afterrender的逻辑是一致的。
-                    modifyMainText(target);
+                    if (target.helper.isInStage('RENDERED')) {
+                        modifyMainText(target);
+                    }
                 }
             }
         );

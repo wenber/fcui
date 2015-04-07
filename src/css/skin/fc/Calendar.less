@@ -6,22 +6,22 @@
 
 @calendar-border-radius: 2px;
 
-.set-calendar-shadow(@shadow-color: @skin-fc-shadow-color) {
+.set-fccalendar-shadow(@shadow-color: @skin-fc-shadow-color) {
     #skin-fc-mixin > .box-shadow(0 1px 3px @shadow-color);
 }
 
-.@{skin-fc-prefix}-calendar {
+.@{skin-fc-prefix}-fccalendar {
     #skin-fc-mixin > .border-radius(@calendar-border-radius);
     width: 188px;
     height: 28px;
     line-height: 2em;
     padding: 0 10px;
-    border-color: @skin-fc-shadow-color;
+    border: 1px solid @skin-fc-shadow-color;
     background: @skin-fc-bg-color-gray;
     color: @skin-fc-text-color-gray-dark;
 
     &:hover {
-        .set-calendar-shadow();
+        .set-fccalendar-shadow();
         border-color: @skin-fc-text-color-gray-light;
     }
 
@@ -54,7 +54,7 @@
         &:hover {
             border-color: @skin-fc-text-color-blue;
             
-            .@{skin-fc-prefix}-calendar-arrow:before {
+            .@{skin-fc-prefix}-fccalendar-arrow:before {
                 color: @skin-fc-text-color-blue;
             }
         }
@@ -69,7 +69,7 @@
             color: @skin-fc-text-color-disabled;
             cursor: default;
 
-            .@{skin-fc-prefix}-calendar-arrow:before {
+            .@{skin-fc-prefix}-fccalendar-arrow:before {
                 color: @skin-fc-shadow-color;
             }
         }
@@ -77,8 +77,11 @@
 
     &-layer {
         #skin-fc-mixin > .border-radius(@calendar-border-radius);
-        .set-calendar-shadow();
+        .set-fccalendar-shadow();
         border: 1px solid @skin-fc-text-color-gray-light;
+        &-hidden {
+            display: none;
+        }
     }
 
     /** 验证 */
