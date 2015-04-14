@@ -95,7 +95,9 @@ define(function (require) {
                 control.main,
                 'mousedown',
                 function (e) {
-                    e.stopPropagation();
+                    if (control.hasState('active')) { // 只有layer在显示的时候，才阻止document的冒泡。
+                        e.stopPropagation();
+                    }
                 }
             );
         }

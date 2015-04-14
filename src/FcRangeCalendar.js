@@ -89,6 +89,14 @@ define(
                 this.initBehavior(element);
                 this.control.helper.addDOMEvent(
                     document, 'mousedown', u.bind(close, this));
+                // 不能点层自己也关掉，所以阻止冒泡到`document`
+                this.control.helper.addDOMEvent(
+                    element,
+                    'mousedown',
+                    function (e) {
+                        e.stopPropagation();
+                    }
+                );
                 this.syncState(element);
 
                 // IE下元素始终有`parentNode`，无法判断是否进入了DOM
