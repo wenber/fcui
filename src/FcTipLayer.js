@@ -501,7 +501,7 @@ define(function (require) {
                      */
                     show: lib.curry(
                         delayShow, me, options.delayTime,
-                        targetElement, options.positionOpt
+                        targetElement, +options.positionOpt
                     ),
 
                     /**
@@ -672,7 +672,7 @@ define(function (require) {
                 this.main, 'mouseover',
                 lib.bind(
                     this.show, this, handler.targetElement,
-                    options.positionOpt
+                    +options.positionOpt
                 )
             );
 
