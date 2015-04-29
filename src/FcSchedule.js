@@ -351,9 +351,10 @@ define(function (require) {
     function repaintView(schedule, value) {
         var me = schedule;
         me.fire('beforerepaintview');
-        var selectedClass = helper.getPartClasses(me, 'time-selected');
+        var selectedClass = me.selectedOnClass || helper.getPartClasses(me, 'time-selected');
+        var selectedOffClass = me.selectedOffClass || '';
         var hoverClass = helper.getPartClasses(me, 'time-hover');
-        var thirdClass = typeof me.thirdClass === 'string' ? me.thirdClass : '';
+        var thirdClass = me.thirdClass || '';
 
         // 根据value设置时间checkbox的状态
         var valueCopy = rawValueClone(value);
@@ -374,7 +375,6 @@ define(function (require) {
                 lib.removeClass(label, 'selected');
             }
         });
-
         for (var i = 0; i < 7; i++) {
             var statusArr = [];
             // item dom
@@ -384,9 +384,8 @@ define(function (require) {
             removeSelectedLineCoverTip(schedule, lineEl);
 
             for (var j = 0; j < 24; j++) {
-
                 var item = lib.g(getId(me, 'time_' + i + '_' + j));
-                var val  = value[i][j];
+                var val  = (value[i] == null) ? 0 : value[i][j];
 
                 // 根据value,设置item的选中状态
                 if (+val === 1) {
@@ -394,6 +393,9 @@ define(function (require) {
                 }
                 else if (!val) {
                     lib.removeClasses(item, selectedClass);
+                    if (selectedOffClass) {
+                        item.className += ' ' + selectedOffClass;
+                    }
                 }
                 // 两种状态共存
                 else if (+val === 2) {
@@ -445,7 +447,6 @@ define(function (require) {
             var coverDiv = document.createElement('aside');
             var cssStyle = ';width:' + length * 25
                  + 'px;top:0;left:' + start * 25 + 'px;';
-
             // 设置星期checkbox的选中值
             checkInput.checked = length === 24 ? true : false;
 
@@ -462,7 +463,7 @@ define(function (require) {
                     end: end,
                     text: length === 24
                         ? '全天投放' : start + ':00-' + end + ':00',
-                    coverClass: getClass(me, 'covertimes-tip')
+                    coverClass: me.coverClass || getClass(me, 'covertimes-tip')
                 }
             );
 
@@ -633,7 +634,6 @@ define(function (require) {
      */
     function shortcutClickHandler(e) {
         var target = lib.event.getTarget(e);
-
         if (!target || !lib.hasAttribute(target, 'data-item')) {
             return;
         }
@@ -1198,13 +1198,7 @@ define(function (require) {
         var inputs = dayHead.getElementsByTagName('input');
 
         for (var i = 0, len = inputs.length; i < len; i++) {
-            // 针对没有的属性，必须使用setAttribute设置
-            if (!inputs[i][state]) {
-                inputs[i].setAttribute(state, value);
-            }
-            else {
-                inputs[i][state] = value;
-            }
+            inputs[i][state] = value;
         }
     }
 
@@ -1217,14 +1211,9 @@ define(function (require) {
     function setHourCheckboxState(schedule, state, value) {
         var hourHead = lib.g(getId(schedule, 'hour-head'));
         var inputs = hourHead.getElementsByTagName('input');
+
         _.each(inputs, function (item) {
-            // 针对没有的属性，必须使用setAttribute设置
-            if (!item[state]) {
-                item.setAttribute(state, value);
-            }
-            else {
-                item[state] = value;
-            }
+            item[state] = value;
         });
     }
 
@@ -1252,21 +1241,6 @@ define(function (require) {
         }
 
         schedule.setRawValue(rawValueCopy);
-    }
-
-    /**
-     * 只读时，单击事件设置为空
-     * @param {Schedule} schedule 当前控件
-     * @param {boolean} readonly 是否只读
-     */
-    function setHourReadonly(schedule, readonly) {
-        var timebody = lib.g(getId(schedule, 'time-body'));
-        if (readonly) {
-            timebody.on('click', '.ui-schedule-time', function (e) {
-                e.stopPropagation();
-                return false;
-            });
-        }
     }
 
     proto = _.extend(proto, {
@@ -1465,7 +1439,6 @@ define(function (require) {
             {
                 name: 'disabled',
                 paint: function (schedule, value) {
-
                     setDayCheckboxState(schedule, 'disabled', value);
                     setHourCheckboxState(schedule, 'disabled', value);
                 }
@@ -1473,10 +1446,13 @@ define(function (require) {
             {
                 name: 'readonly',
                 paint: function (schedule, value) {
-
-                    setDayCheckboxState(schedule, 'readonly', value);
-                    setHourCheckboxState(schedule, 'readonly', value);
-                    setHourReadonly(schedule, value);
+                    setDayCheckboxState(schedule, 'disabled', value);
+                    setHourCheckboxState(schedule, 'disabled', value);
+                    var timebody = lib.g(getId(schedule, 'time-body'));
+                    schedule.helper.removeDOMEvent(timebody, 'mousedown', timeBodyDownHandler);
+                    if (!value) {
+                        schedule.helper.addDOMEvent(timebody, 'mousedown', timeBodyDownHandler);
+                    }
                 }
             }
         ),
