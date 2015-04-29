@@ -104,7 +104,7 @@ define(function (require, exports) {
             checkedState = CURRENT_PAGE_OPTIONS;
         }
         AllSelector.set('value', checkedState);
-
+        
         // 阻止click对Select的冒泡。
         lib.event.stopPropagation(event);
     }
@@ -123,25 +123,25 @@ define(function (require, exports) {
             this.helper.getPartClasses('checkbox').join(' ')
         );
         checkboxElement.appendTo(this.main);
-
+        
         this.on('change', function () {
             this.set('value', this.get('rawValue'));
         });
-
+        
         this.helper.addDOMEvent(checkboxElement[0], 'click',
             _.partial(checkboxChangeHandler, this)
         );
-
+        
         this.helper.addDOMEvent(this.main, 'mouseover',
             _.bind(this.mouseShowDropdownHandler, this)
         );
-
+        
         this.helper.addDOMEvent(this.main, 'mouseout',
             _.bind(this.mouseHideDropdownHandler, this)
         );
-
+        
         var layerElement = this.layer.getElement(true);
-
+        
         this.helper.addDOMEvent(layerElement, 'mouseover',
             _.bind(this.mouseShowDropdownHandler, this)
         );
@@ -255,6 +255,7 @@ define(function (require, exports) {
                 checkboxElement.prop('indeterminate', false);
                 break;
             default: // none or others
+                checkedState = NONE_OPTION;
                 checkboxElement.prop('checked', false);
                 checkboxElement.prop('indeterminate', false);
                 break;
