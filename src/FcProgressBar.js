@@ -4,7 +4,7 @@
  * @author Pride Leong(liangjinping@baidu.com)
  */
 
-define(function(require) {
+define(function (require) {
     var _ = require('underscore');
     var fc = require('fc-core');
 
@@ -125,13 +125,13 @@ define(function(require) {
     };
 
     /**
-     * 控件类型，始终为`"ProgressBar"`
+     * 控件类型，始终为`"FcProgressBar"`
      *
      * @type {string}
      * @readonly
      * @override
      */
-    proto.type = 'ProgressBar';
+    proto.type = 'FcProgressBar';
 
     /**
      * 初始化，将模板插入html中

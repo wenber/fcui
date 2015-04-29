@@ -29,7 +29,7 @@
  * @author Pride Leong(liangjinping@baidu.com)
  */
 
-define(function(require) {
+define(function (require) {
     var etpl = require('etpl');
     var ui = require('./main');
     var _ = require('underscore');
@@ -37,7 +37,7 @@ define(function(require) {
     var lib = require('./lib');
     var eventTarget = require('mini-event/EventTarget');
 
-    require('./ProgressBar');
+    require('./FcProgressBar');
 
     /**
      * 随机生成id的前缀
@@ -143,7 +143,7 @@ define(function(require) {
         +     '<!-- if: ${type} !== "TextOnly" -->'
         +     '<div class="view-loading-img ${imgClass}">'
         +         '<!-- if: ${type} === "progress" -->'
-        +         '<div data-ui-id="${progressBarId}" data-ui-type="ProgressBar"></div>'
+        +         '<div data-ui-id="${progressBarId}" data-ui-type="FcProgressBar"></div>'
         +         '<!-- /if -->'
         +     '</div>'
         +     '<!-- /if -->'
