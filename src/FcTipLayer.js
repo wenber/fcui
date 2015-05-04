@@ -124,7 +124,7 @@ define(function (require) {
                 // 放到第一个
                 else if (control.main.firstChild) {
                     lib.insertBefore(
-                        mainDOM, head, control.main.firstChild
+                        mainDOM, control.main.firstChild
                     );
                 }
                 else {
