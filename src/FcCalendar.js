@@ -245,6 +245,17 @@ define(function (require) {
          */
         initEvents: function () {
             this.helper.addDOMEvent(this.main, 'click', u.bind(this.layer.toggle, this.layer));
+            this.on('hidelayer', this.hidelayerHandler, this);
+        },
+
+        /**
+         * 浮层隐藏执行方法。
+         */
+        hidelayerHandler: function () {
+            var cal = this.getChild('monthView');
+            u.each(['yearSel', 'monthSel'], function (selChildName) {
+                cal.getChild(selChildName).layer.hide();
+            });
         },
 
         /**

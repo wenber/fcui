@@ -1002,6 +1002,19 @@ define(
          */
         RangeCalendar.prototype.initEvents = function () {
             this.helper.addDOMEvent(this.main, 'mousedown', u.bind(this.layer.toggle, this.layer));
+            this.on('hidelayer', this.hidelayerHandler, this);
+        };
+
+        /**
+         * 浮层隐藏执行方法。
+         */
+        RangeCalendar.prototype.hidelayerHandler = function () {
+            u.each(['beginCal', 'endCal'], function (childName) {
+                var cal = this.getChild(childName);
+                u.each(['yearSel', 'monthSel'], function (selChildName) {
+                    cal.getChild(selChildName).layer.hide();
+                });
+            }, this);
         };
 
         /**
