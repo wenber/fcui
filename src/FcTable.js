@@ -189,13 +189,6 @@ define(function (require) {
          */
         encode: false,
         /**
-         * 支持的行选中模式。可以为 'single' 或 'multi'
-         * 不可通过setProperties修改
-         * @type {String}
-         * @defalut ''
-         */
-        select: '',
-        /**
          * 是否要有竖向的边框
          * 不可通过setProperties修改
          * @type {boolean}
@@ -243,6 +236,12 @@ define(function (require) {
          * @default false
          */
         isLockedRight: false,
+        /**
+         * 支持的行选中模式。可以为 'single' 或 'multi'
+         * @type {String}
+         * @defalut ''
+         */
+        select: '',
         /**
          * 表格体是否含有任何ESUI控件。如果有的话Table将每次刷新表格体时
          * 初始化所有控件
@@ -1756,7 +1755,7 @@ define(function (require) {
         var columnsWidthChanged = false;
 
         // 列的定义发生变化，重算fields
-        if (allProperities.fields) {
+        if (allProperities.fields || allProperities.select) {
             this.initFields();
             fieldsChanged = true;
         }
